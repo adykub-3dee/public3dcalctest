@@ -19,10 +19,13 @@
             --btn-bg: #eeeeee; --job-bg: #fdfdfd;
         }
 
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); padding: 10px; margin: 0; transition: background 0.3s, color 0.3s; }
+        /* OPRAVA: overflow-x: hidden pre zabránenie horizontálnemu scrollu na mobile */
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); padding: 10px; margin: 0; transition: background 0.3s, color 0.3s; overflow-x: hidden;}
         
         #user_display { font-size: 0.8em; color: var(--success); font-weight: bold; margin-bottom: 5px; text-transform: uppercase; min-height: 1.2em; }
-        #total_users_display { position: fixed; bottom: 5px; left: 10px; font-size: 0.7em; color: #888; font-weight: bold; z-index: 100; background: var(--bg); padding: 2px 5px; border-radius: 4px; }
+        
+        /* OPRAVA: pointer-events: none aby text neblokoval dotyky na displeji */
+        #total_users_display { position: fixed; bottom: 5px; left: 10px; font-size: 0.7em; color: #888; font-weight: bold; z-index: 50; background: var(--bg); padding: 2px 5px; border-radius: 4px; pointer-events: none; opacity: 0.8;}
 
         .header { width: 100%; max-width: 1200px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 12px; margin: 0 auto 15px auto; gap: 10px; }
         .header-center { flex-grow: 1; text-align: center; }
@@ -39,12 +42,16 @@
 
         .btn-info { background: transparent; color: var(--primary); border: 1px solid var(--primary); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 0.7em; cursor: pointer; font-weight: bold; margin-left: 5px;}
 
-        .main-layout { width: 100%; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 20px; }
-        @media (min-width: 768px) { .main-layout { grid-template-columns: 340px 1fr; } }
+        /* OPRAVA: padding-bottom aby na mobile nezmizla posledná karta */
+        .main-layout { width: 100%; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 20px; padding-bottom: 50px;}
+        
+        /* OPRAVA: sticky efekt aplikujeme iba pre väčšie obrazovky */
+        @media (min-width: 768px) { 
+            .main-layout { grid-template-columns: 340px 1fr; } 
+            .sticky { position: sticky; top: 15px; z-index: 10; }
+        }
 
         .panel { background: var(--card); border-radius: 16px; padding: 20px; border: 1px solid var(--border); transition: all 0.3s; }
-        .sticky { position: sticky; top: 15px; z-index: 10; }
-
         label { display: block; font-size: 0.65em; color: #888; text-transform: uppercase; margin-bottom: 4px; font-weight: 600; }
         input { width: 100%; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text); padding: 10px; border-radius: 8px; box-sizing: border-box; font-size: 16px; margin-bottom: 8px; outline: none; }
         
@@ -116,14 +123,16 @@
 
         @keyframes pulse-edit { 0% { box-shadow: 0 0 5px var(--accent); } 50% { box-shadow: 0 0 12px var(--accent); } 100% { box-shadow: 0 0 5px var(--accent); } }
 
+        /* OPRAVA: Preusporiadanie karty pre mobil do stĺpcov, aby údaje nepretekali von z obrazovky */
         @media (max-width: 600px) {
-            .job-card { flex-wrap: wrap; padding-bottom: 0; }
-            .sort-controls { padding: 5px; order: 1; border-right: none; border-bottom: 1px solid #222; width: 100%; flex-direction: row; justify-content: center; height: 30px; }
-            .job-info { order: 2; flex: 1 1 60%; padding: 8px; }
-            .job-profit { order: 3; flex: 1 1 30%; border-left: none; padding: 8px; border-bottom: 1px solid #222; }
-            .job-data { order: 4; flex: 1 1 100%; justify-content: space-around; background: rgba(0,0,0,0.2); border-bottom: 1px solid #222; padding: 6px; }
-            .actions { order: 5; flex: 1 1 100%; justify-content: center; padding: 8px; }
-            .data-item { min-width: auto; text-align: center; }
+            .job-card { flex-direction: column; align-items: stretch; padding: 5px; }
+            .sort-controls { flex-direction: row; border-right: none; border-bottom: 1px solid var(--border); padding: 5px; justify-content: center; height: auto;}
+            .job-info { padding: 10px 5px; text-align: center; }
+            .job-data { justify-content: space-around; background: rgba(0,0,0,0.1); border-radius: 8px; padding: 10px; margin-bottom: 5px; }
+            .data-item { align-items: center; }
+            .job-profit { border-left: none; border-top: 1px solid var(--border); flex-direction: row; justify-content: space-between; align-items: center; padding: 10px 5px; }
+            .actions { justify-content: center; flex-wrap: wrap; }
+            .action-btn { flex: 1; min-width: 45px; padding: 10px;}
         }
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999; backdrop-filter: blur(5px); }
@@ -233,7 +242,6 @@
     <div id="info_text_content"></div>
     <button class="btn-add" id="btn_modal_close" onclick="closeInfo()">Zavrieť</button>
 </div>
-
 <script>
     const CLOUD_URL = "https://script.google.com/macros/s/AKfycbxYzW9mSnJWvxJfvj3QgHN9iiI2tWNIjYKAFbDkYvasUAj2Vwrcl2NNaVGqEpWtLPX2/exec";
 
@@ -336,6 +344,7 @@
         }
         applyTexts(); updatePreview(); refreshUI();
     }
+
     function setLang(l) { currentLang = l; applyTexts(); refreshUI(); }
 
     function applyTexts() {
@@ -370,7 +379,7 @@
         const p = parseFloat(document.getElementById('in_price_per').value) || 0;
         const f = parseFloat(document.getElementById('cfg_fil').value) || 19;
         const e = parseFloat(document.getElementById('cfg_ele').value) || 0.19;
-        const watt = parseFloat(document.getElementById('cfg_watt').value) || 120;
+        const watt = parseFloat(document.getElementById('cfg_watt').value) || 120; 
 
         const totalW = w * c, totalMins = (h * 60 + m) * c;
         const matC = (totalW / 1000) * f, eleC = (totalMins / 60) * (watt / 1000) * e;
@@ -436,7 +445,7 @@
         items.unshift({id:Date.now(), type:'buy', status:'ok', name:n, sell: v>0?v:0, cost: v<0?Math.abs(v):0, profit:v, date: new Date().toLocaleString(), currency: currentCurr});
         refreshUI();
     }
-
+    
     function moveListItem(id, action) {
         const idx = items.findIndex(i => i.id === id); if (idx < 0) return;
         const item = items.splice(idx, 1)[0];
@@ -486,10 +495,8 @@
             const isEditing = editingId === i.id;
             const isCP = i.status === 'cp';
             const count = i.count || 1;
-            const costPer = dCost / count;
-            const sellPer = dSell / count;
-
-            // Zobrazenie počtu kusov v názve položky
+            const costPer = dCost / count; 
+            const sellPer = dSell / count; 
             const countText = count > 1 ? ` <span style="font-size:0.7em; color:var(--primary);">(${count} ks)</span>` : "";
 
             const card = document.createElement('div');
