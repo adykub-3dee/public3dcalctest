@@ -11,495 +11,488 @@
             --border: #333; --cp-color: #aaa; --input-bg: #000; --input-border: #444;
             --btn-bg: #222; --job-bg: #1a1a1a;
         }
-
         .light-theme {
             --bg: #f4f5f7; --card: #ffffff; --text: #111111;
             --primary: #0066cc; --accent: #e6b800; --danger: #cc0000; --success: #009944;
             --border: #cccccc; --cp-color: #777777; --input-bg: #ffffff; --input-border: #bbbbbb;
-            --btn-bg: #eeeeee; --job-bg: #fdfdfd;
+            --btn-bg: #eeeeee; --job-bg: #f9f9f9;
         }
-
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); padding: 10px; margin: 0; transition: background 0.3s, color 0.3s; }
-        
-        #user_display { font-size: 0.8em; color: var(--success); font-weight: bold; margin-bottom: 5px; text-transform: uppercase; min-height: 1.2em; }
-        #total_users_display { position: fixed; bottom: 5px; left: 10px; font-size: 0.7em; color: #888; font-weight: bold; z-index: 100; background: var(--bg); padding: 2px 5px; border-radius: 4px; }
-
-        .header { width: 100%; max-width: 1200px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 12px; margin: 0 auto 15px auto; gap: 10px; }
-        .header-center { flex-grow: 1; text-align: center; }
-        #live-clock { font-size: 1.8em; font-weight: 900; color: var(--text); margin-bottom: 2px; }
-        #live-date { font-size: 0.85em; color: var(--primary); text-transform: uppercase; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 5px; }
-        
-        .config-bar { background: var(--job-bg); padding: 10px; border-radius: 10px; display: flex; gap: 10px; border: 1px solid var(--primary); align-items: flex-end; flex-wrap: wrap;}
-        .config-input { background: var(--input-bg); border: 1px solid var(--primary); color: var(--primary); font-weight: bold; text-align: center; border-radius: 4px; padding: 5px; width: 65px; }
-        .btn-toggle { background: var(--btn-bg); color: var(--text); border: 1px solid var(--border); border-radius: 4px; padding: 5px 10px; font-weight: bold; cursor: pointer; transition: 0.2s; height: 30px; display: flex; align-items: center; justify-content: center;}
-        
-        .lang-switcher, .curr-switcher { display: flex; gap: 5px; margin-right: 10px; align-items: center; }
-        .lang-btn, .curr-btn { background: transparent; border: none; color: #666; cursor: pointer; font-weight: bold; font-size: 0.8em; padding: 2px 5px; transition: 0.3s; }
-        .lang-btn.active, .curr-btn.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
-
-        .btn-info { background: transparent; color: var(--primary); border: 1px solid var(--primary); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 0.7em; cursor: pointer; font-weight: bold; margin-left: 5px;}
-
-        .main-layout { width: 100%; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 20px; }
-        @media (min-width: 768px) { .main-layout { grid-template-columns: 340px 1fr; } }
-
-        .panel { background: var(--card); border-radius: 16px; padding: 20px; border: 1px solid var(--border); transition: all 0.3s; }
-        .sticky { position: sticky; top: 15px; z-index: 10; }
-
-        label { display: block; font-size: 0.65em; color: #888; text-transform: uppercase; margin-bottom: 4px; font-weight: 600; }
-        input { width: 100%; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text); padding: 10px; border-radius: 8px; box-sizing: border-box; font-size: 16px; margin-bottom: 8px; outline: none; }
-        
-        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-        .status-toggle { display: flex; background: var(--input-bg); border-radius: 8px; border: 1px solid var(--input-border); margin-bottom: 15px; overflow: hidden; }
-        .st-btn { flex: 1; padding: 10px; text-align: center; font-weight: bold; cursor: pointer; font-size: 0.8em; color: #777; }
-        .st-btn.active { color: #fff; }
-        .light-theme .st-btn.active { color: #000; }
-        .st-btn-cp.active { background: var(--cp-color); }
-        .st-btn-ok.active { background: var(--success); color: #000; }
-
-        .calc-preview { background: rgba(255, 204, 0, 0.05); padding: 12px; border-radius: 10px; margin: 10px 0; border: 1px solid var(--accent); color: var(--accent); }
-        .line { display: flex; justify-content: space-between; align-items: center; font-weight: bold; margin-bottom: 5px; }
-        .input-inline { background: rgba(255, 204, 0, 0.1); border: 1px solid var(--accent); color: var(--accent); padding: 4px 8px; border-radius: 4px; width: 85px; text-align: right; font-weight: bold; }
-
-        .btn-add { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: 800; cursor: pointer; text-transform: uppercase; margin-top: 5px; }
-        .btn-buy { background: transparent; color: var(--success); border: 1px solid var(--success); padding: 8px; width: 100%; border-radius: 10px; margin-top: 10px; cursor: pointer; font-weight: bold; }
-
-        .cloud-zone { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
-        .cloud-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .btn-cloud { width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; font-size: 0.8em; }
-        .btn-backup { background: #0044cc; color: white; }
-        .btn-restore { background: var(--btn-bg); color: var(--text); border: 1px solid var(--border); }
-        .btn-register { background: var(--success); color: #000; }
-
-        .summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
-        @media (min-width: 900px) { .summary-grid { grid-template-columns: repeat(4, 1fr); } }
-        
-        .stat-card { background: var(--job-bg); padding: 12px; border-radius: 12px; border: 1px solid var(--border); text-align: center; }
-        .stat-label { font-size: 0.6em; color: #888; text-transform: uppercase; }
-        .stat-value { font-size: 1.1em; font-weight: 900; }
-        .card-spent { color: var(--danger); border-bottom: 2px solid var(--danger); }
-        .card-profit { border: 2px solid var(--success); color: var(--success); }
-
-        .search-input { width: 100%; background: var(--job-bg); border: 2px solid var(--primary); color: var(--text); padding: 12px; border-radius: 10px; font-weight: bold; box-sizing: border-box; margin-bottom: 15px; }
-
-        .job-card { background: #111; border: 1px solid #333; border-radius: 12px; margin-bottom: 10px; display: flex; align-items: center; overflow: hidden; position: relative; transition: 0.2s; }
-        .job-card.is-editing { border: 2px solid var(--accent) !important; background: rgba(255, 204, 0, 0.15) !important; }
-        .job-card.is-cp { opacity: 0.8; border-style: dashed; }
-        .job-card.drag-over { border: 2px dashed var(--primary); transform: scale(1.02); }
-        
-        .type-buy { border-left: 5px solid var(--danger); }
-        .type-print { border-left: 5px solid var(--primary); }
-
-        .sort-controls { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px; border-right: 1px solid var(--border); }
-        .sc-btn { font-size: 0.9em; cursor: pointer; color: #888; transition: 0.2s; user-select: none; }
-        .sc-drag { font-weight: bold; font-size: 1.3em; cursor: grab; padding: 2px; }
-
-        .job-info { flex: 1; padding: 10px; min-width: 100px; overflow: hidden; }
-        .job-name { font-weight: bold; display: block; font-size: 1em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .job-tag { font-size: 0.55em; padding: 1px 4px; border-radius: 4px; margin-left: 5px; vertical-align: middle; }
-        .tag-cp { background: #666; color: #fff; }
-        .tag-ok { background: var(--success); color: #000; }
-
-        .job-data { display: flex; gap: 10px; text-align: right; padding: 10px; }
-        .data-item { display: flex; flex-direction: column; min-width: 75px; }
-        .data-label { font-size: 0.55em; color: #888; text-transform: uppercase; }
-        .data-val { font-size: 0.9em; font-weight: bold; }
-        .val-per-pc { font-size: 0.65em; font-weight: normal; color: #888; margin-top: 1px; }
-
-        .job-profit { min-width: 80px; text-align: right; font-weight: 900; font-size: 1.1em; border-left: 1px solid var(--border); padding: 10px; display: flex; flex-direction: column; justify-content: center; }
-        .profit-label { font-size: 0.45em; display: block; color: #888; text-transform: uppercase; }
-        
-        .actions { display: flex; gap: 4px; padding: 8px; }
-        .action-btn { background: var(--btn-bg); border: 1px solid var(--border); color: #888; cursor: pointer; padding: 6px; border-radius: 6px; transition: 0.3s; font-size: 0.9em; }
-        .action-btn.active-status { background: var(--success); color: #000; border-color: var(--success); }
-        .action-btn.is-active-edit { background: var(--accent) !important; color: #000 !important; animation: pulse-edit 1.5s infinite; }
-
-        @keyframes pulse-edit { 0% { box-shadow: 0 0 5px var(--accent); } 50% { box-shadow: 0 0 12px var(--accent); } 100% { box-shadow: 0 0 5px var(--accent); } }
-
-        @media (max-width: 600px) {
-            .job-card { flex-wrap: wrap; padding-bottom: 0; }
-            .sort-controls { padding: 5px; order: 1; border-right: none; border-bottom: 1px solid #222; width: 100%; flex-direction: row; justify-content: center; height: 30px; }
-            .job-info { order: 2; flex: 1 1 60%; padding: 8px; }
-            .job-profit { order: 3; flex: 1 1 30%; border-left: none; padding: 8px; border-bottom: 1px solid #222; }
-            .job-data { order: 4; flex: 1 1 100%; justify-content: space-around; background: rgba(0,0,0,0.2); border-bottom: 1px solid #222; padding: 6px; }
-            .actions { order: 5; flex: 1 1 100%; justify-content: center; padding: 8px; }
-            .data-item { min-width: auto; text-align: center; }
-        }
-
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999; backdrop-filter: blur(5px); }
-        .modal-content { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card); padding: 25px; border: 2px solid var(--primary); z-index: 1000; border-radius: 20px; width: 90%; max-width: 450px; line-height: 1.5; }
-        .info-list { margin: 15px 0; padding-left: 0; list-style: none; }
-        .info-list li { margin-bottom: 10px; font-size: 0.9em; position: relative; padding-left: 20px; }
-        .info-list li::before { content: "•"; color: var(--primary); position: absolute; left: 0; font-weight: bold; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); padding-bottom: 30px; transition: 0.3s; }
+        .nav-bar { display: flex; justify-content: space-between; align-items: center; background: var(--card); padding: 10px 15px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        .nav-left { font-weight: 800; font-size: 1.2em; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        .nav-right { display: flex; gap: 8px; }
+        .icon-btn { background: var(--btn-bg); border: 1px solid var(--border); color: var(--text); width: 36px; height: 36px; border-radius: 8px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 1.1em; transition: 0.2s; }
+        .icon-btn:hover { background: var(--border); }
+        .container { max-width: 600px; margin: 15px auto; padding: 0 10px; }
+        .config-bar { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; background: var(--card); padding: 10px; border-radius: 10px; border: 1px solid var(--border); }
+        .config-item { display: flex; flex-direction: column; }
+        .config-item label { font-size: 0.75em; color: var(--cp-color); margin-bottom: 3px; }
+        .config-item input { background: var(--input-bg); color: var(--text); border: 1px solid var(--input-border); padding: 6px; border-radius: 5px; text-align: center; }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .input-group { margin-bottom: 12px; }
+        .input-group label { display: block; font-size: 0.85em; margin-bottom: 5px; color: var(--cp-color); }
+        input[type="text"], input[type="number"] { width: 100%; padding: 12px; background: var(--input-bg); color: var(--text); border: 1px solid var(--input-border); border-radius: 8px; font-size: 1em; }
+        .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-add { background: var(--primary); color: #fff; margin-top: 5px; }
+        .btn-add:active { background: #0088cc; transform: scale(0.98); }
+        .btn-edit { background: var(--accent); color: #000; margin-top: 5px; display: none; }
+        .btn-cancel { background: var(--btn-bg); color: var(--text); border: 1px solid var(--border); margin-top: 5px; display: none; }
+        .summary { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: var(--job-bg); border-radius: 8px; margin-top: 10px; border: 1px solid var(--border); }
+        .sum-val { font-size: 1.5em; font-weight: bold; color: var(--success); }
+        .sum-pcs { font-size: 0.85em; color: var(--cp-color); margin-top: 4px; }
+        .status-toggle { display: flex; gap: 5px; margin-bottom: 15px; }
+        .status-toggle button { flex: 1; padding: 10px; border: 1px solid var(--border); background: var(--btn-bg); color: var(--text); border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .status-toggle button.active#st_cp { background: var(--danger); color: #fff; border-color: var(--danger); }
+        .status-toggle button.active#st_ok { background: var(--success); color: #000; border-color: var(--success); }
+        .job-item { background: var(--job-bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: grab; transition: border 0.2s; }
+        .job-item.drag-over { border: 2px dashed var(--primary); opacity: 0.7; }
+        .job-info { flex: 1; }
+        .job-actions { display: flex; gap: 6px; }
+        .action-btn { background: var(--btn-bg); border: 1px solid var(--border); color: var(--text); padding: 8px; border-radius: 6px; cursor: pointer; font-size: 1em; }
+        .btn-status.cp { color: var(--danger); font-weight: bold; border-color: var(--danger); }
+        .btn-status.ok { color: var(--success); font-weight: bold; border-color: var(--success); }
+        .is-active-edit { border-color: var(--accent); color: var(--accent); }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .stat-box { background: var(--job-bg); padding: 12px; border-radius: 8px; border: 1px solid var(--border); text-align: center; }
+        .stat-val { font-size: 1.2em; font-weight: bold; margin-top: 5px; }
+        .cloud-section { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .cloud-btn { padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; }
+        .btn-backup { background: #6c5ce7; color: white; }
+        .btn-restore { background: #00b894; color: white; }
+        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); z-index: 1000; width: 90%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .modal h3 { margin-bottom: 15px; }
+        .modal input { margin-bottom: 10px; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; }
+        .info-content { font-size: 0.9em; line-height: 1.5; color: var(--cp-color); margin-bottom: 20px; }
+        .info-content p { margin-bottom: 10px; }
+        .user-info { text-align: center; margin-bottom: 15px; font-size: 0.9em; color: var(--accent); font-weight: bold; }
+        .users-count { font-size: 0.8em; color: var(--cp-color); text-align: center; margin-top: -10px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
-<div id="total_users_display"></div>
 
-<div class="header">
-    <div>
-        <div id="user_display"></div>
-        <h1 style="margin:0; font-size:1.4em; color:var(--primary);">3Dee <span style="color:var(--text)">PRO calc</span></h1>
+<div class="nav-bar">
+    <div class="nav-left">
+        <span id="nav_title">3Dee Pro</span>
     </div>
-    <div class="header-center">
-        <div id="live-clock">--:--:--</div>
-        <div id="live-date">--.--.---- <button class="btn-info" onclick="openInfo()">i</button></div>
+    <div class="nav-right">
+        <button class="icon-btn" onclick="openInfo()">ℹ️</button>
+        <button class="icon-btn" onclick="toggleCurrency()" id="btn_curr">€</button>
+        <button class="icon-btn" onclick="toggleLang()" id="btn_lang">SK</button>
+        <button class="icon-btn" onclick="toggleTheme()" id="btn_theme">🌙</button>
     </div>
+</div>
+<div class="container">
+    <div class="user-info" id="user_display"></div>
+    <div class="users-count" id="total_users_display"></div>
+
+    <div class="cloud-section">
+        <button class="cloud-btn btn-backup" onclick="openCloudModal('backup')" id="m_btn_backup">☁️ ZÁLOHOVAŤ</button>
+        <button class="cloud-btn btn-restore" onclick="openCloudModal('restore')" id="m_btn_restore">🔄 OBNOVIŤ</button>
+    </div>
+
     <div class="config-bar">
-        <div><label id="cfg_lbl_fil">/KG</label><input type="number" id="cfg_fil" value="19" class="config-input"></div>
-        <div><label id="cfg_lbl_ele">/KWH</label><input type="number" id="cfg_ele" value="0.19" class="config-input"></div>
-        <div><label id="cfg_lbl_watt">WATT</label><input type="number" id="cfg_watt" value="120" class="config-input"></div>
-        
-        <div class="curr-switcher">
-            <button class="curr-btn active" id="cur_eur" onclick="setCurrency('EUR')">EUR</button>
-            <button class="curr-btn" id="cur_czk" onclick="setCurrency('CZK')">CZK</button>
+        <div class="config-item">
+            <label id="lbl_cfg_fil">Filament (/kg)</label>
+            <input type="number" id="cfg_fil" value="15" step="0.1">
         </div>
-
-        <div class="lang-switcher">
-            <button class="lang-btn" id="l_en" onclick="setLang('en')">EN</button>
-            <button class="lang-btn" id="l_sk" onclick="setLang('sk')">SK</button>
-            <button class="lang-btn" id="l_cz" onclick="setLang('cz')">CZ</button>
+        <div class="config-item">
+            <label id="lbl_cfg_ele">Elektrina (/kWh)</label>
+            <input type="number" id="cfg_ele" value="0.20" step="0.01">
         </div>
-        <button id="btn_theme" class="btn-toggle" onclick="toggleTheme()">🌙</button>
+        <div class="config-item">
+            <label id="lbl_cfg_watt">Spotreba (W)</label>
+            <input type="number" id="cfg_watt" value="120" step="10">
+        </div>
     </div>
-</div>
 
-<div class="main-layout">
-    <div class="panel sticky">
-        <div class="cloud-zone">
-            <button class="btn-cloud btn-register" id="btn_reg" onclick="handleCloud('register')">👤 VYTVORIŤ ÚČET</button>
-            <div class="cloud-row">
-                <button class="btn-cloud btn-backup" id="btn_backup" onclick="handleCloud('backup')">☁️ ZÁLOHOVAŤ</button>
-                <button class="btn-cloud btn-restore" id="btn_restore" onclick="handleCloud('restore')">⬇️ OBNOVIŤ</button>
-            </div>
-        </div>
-
-        <h2 id="form_title" style="color:var(--primary); font-size: 1.1em; margin-bottom: 15px;">✚ NOVÁ TLAČ</h2>
-        
-        <label id="lbl_type">Typ záznamu</label>
+    <div class="card">
         <div class="status-toggle">
-            <div id="st_cp" class="st-btn st-btn-cp" onclick="setStatus('cp')">CP (Ponuka)</div>
-            <div id="st_ok" class="st-btn st-btn-ok active" onclick="setStatus('ok')">OK (Výroba)</div>
+            <button id="st_cp" class="active" onclick="setStatus('cp')">Cenová Ponuka</button>
+            <button id="st_ok" onclick="setStatus('ok')">Hotovo (OK)</button>
+        </div>
+        
+        <div class="input-group">
+            <label id="lbl_name">Názov zákazky</label>
+            <input type="text" id="in_name" placeholder="...">
         </div>
 
-        <label id="lbl_name">Názov Projektu</label>
-        <input type="text" id="in_name" placeholder="...">
-        <div class="row">
-            <div><label id="lbl_w">Váha/ks (g)</label><input type="number" id="in_w" step="any"></div>
-            <div><label id="lbl_count">Počet ks</label><input type="number" id="in_count" value="1"></div>
-        </div>
-        <div class="row">
-            <div><label id="lbl_h">Hodiny</label><input type="number" id="in_h"></div>
-            <div><label id="lbl_m">Minúty</label><input type="number" id="in_m"></div>
-        </div>
-        <label id="lbl_price">Predajná cena / 1 ks</label>
-        <input type="number" id="in_price_per" step="any">
-        
-        <div class="calc-preview">
-            <div class="line"><span id="lbl_mat_tot">MATERIÁL SPOLU:</span> <span id="view_total_w">0 g</span></div>
-            <div class="line">
-                <span id="lbl_cost_tot">NÁKLAD:</span> 
-                <input type="number" id="view_total_cost" class="input-inline" step="any" value="0.00" oninput="updatePreview(false)">
+        <div class="row-2">
+            <div class="input-group">
+                <label id="lbl_w">Váha (gramy)</label>
+                <input type="number" id="in_w" value="0">
             </div>
-            <div class="line" style="border-top: 1px solid var(--border); padding-top: 5px; font-size: 1.1em;">
-                <span id="lbl_profit_tot">ČISTÝ ZISK:</span> <span id="view_total_profit">0.00 €</span>
+            <div class="input-group">
+                <label id="lbl_count">Počet kusov</label>
+                <input type="number" id="in_count" value="1">
             </div>
         </div>
-        
-        <button class="btn-add" id="btn_save" onclick="saveItem()">ULOŽIŤ DO HISTÓRIE</button>
-        <button id="btn_cancel" onclick="clearForm()" style="display:none; background:var(--btn-bg); border:1px solid var(--border); color:var(--danger); padding:10px; border-radius:10px; width:100%; margin-top:10px; cursor:pointer; font-weight:bold;">✖ ZRUŠIŤ ÚPRAVU</button>
-        <button class="btn-buy" id="btn_other" onclick="addOtherItem()">✚ NÁKUP / INÉ VÝDAVKY</button>
+
+        <div class="row-2">
+            <div class="input-group">
+                <label id="lbl_h">Čas (Hodiny)</label>
+                <input type="number" id="in_h" value="0">
+            </div>
+            <div class="input-group">
+                <label id="lbl_m">Čas (Minúty)</label>
+                <input type="number" id="in_m" value="0">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label id="lbl_price_per">Moja cena za 1 ks (Voliteľné)</label>
+            <input type="number" id="in_price_per" value="" step="0.1" placeholder="Auto výpočet...">
+        </div>
+
+        <div class="summary">
+            <div>
+                <div style="font-size: 0.9em; color: var(--cp-color);" id="lbl_sum">Spolu za zákazku:</div>
+                <div class="sum-pcs" id="sum_pcs_display">0.00 / ks</div>
+            </div>
+            <div class="sum-val" id="sum_val">0.00 €</div>
+        </div>
+
+        <button class="btn btn-add" id="btn_action" onclick="saveItem()">+ PRIDAŤ POLOŽKU</button>
+        <button class="btn btn-edit" id="btn_save_edit" onclick="saveEdit()">ULOŽIŤ ZMENY</button>
+        <button class="btn btn-cancel" id="btn_cancel_edit" onclick="cancelEdit()">ZRUŠIŤ</button>
     </div>
 
-    <div>
-        <div class="summary-grid">
-            <div class="stat-card"><div class="stat-label" id="stat_lbl_ok">Vytlačené (OK)</div><div class="stat-value" id="total_kg_ever">0.00 kg</div></div>
-            <div class="stat-card"><div class="stat-label" id="stat_lbl_time">Čas Tlače</div><div class="stat-value" id="total_time_ever">0h 0m</div></div>
-            <div class="stat-card"><div class="stat-label" id="stat_lbl_ord">Zákazky</div><div class="stat-value" id="stat_count">0</div></div>
-            <div class="stat-card"><div class="stat-label" id="stat_lbl_rev">Obrat</div><div class="stat-value" id="stat_obrat">0.00 €</div></div>
-            <div class="stat-card card-spent"><div class="stat-label" id="stat_lbl_mat">Materiál</div><div class="stat-value" id="total_mat_cost">0.00 €</div></div>
-            <div class="stat-card card-spent"><div class="stat-label" id="stat_lbl_ele">Elektrina</div><div class="stat-value" id="total_ele_cost">0.00 €</div></div>
-            <div class="stat-card card-spent"><div class="stat-label" id="stat_lbl_other">Iné Extra</div><div class="stat-value" id="total_spent_other">0.00 €</div></div>
-            <div class="stat-card card-profit"><div class="stat-label" style="color:var(--success)" id="stat_lbl_profit">Čistý Zisk</div><div class="stat-value" id="stat_profit">0.00 €</div></div>
-        </div>
+    <h3 style="margin: 20px 0 10px 5px; font-size: 1.1em;" id="lbl_list">Zoznam zákaziek</h3>
+    <div id="job_list"></div>
 
-        <input type="text" id="search_input" class="search-input" placeholder="🔍 Vyhľadať v histórii..." oninput="refreshUI()">
-        <div id="list_container"></div>
+    <div class="card" style="margin-top:20px;">
+        <h3 style="margin-bottom:15px; text-align:center;" id="lbl_stats">Celkové Štatistiky</h3>
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div style="font-size:0.8em;color:var(--cp-color);" id="st_lbl_w">Spotrebovaný plast</div>
+                <div class="stat-val" id="total_kg_ever">0.00 kg</div>
+            </div>
+            <div class="stat-box">
+                <div style="font-size:0.8em;color:var(--cp-color);" id="st_lbl_time">Čas tlače</div>
+                <div class="stat-val" id="total_time_ever">0h 0m</div>
+            </div>
+            <div class="stat-box">
+                <div style="font-size:0.8em;color:var(--cp-color);" id="st_lbl_orders">Počet zákaziek</div>
+                <div class="stat-val" id="stat_count">0</div>
+            </div>
+            <div class="stat-box">
+                <div style="font-size:0.8em;color:var(--cp-color);" id="st_lbl_obrat">Celkový Obrat</div>
+                <div class="stat-val" style="color:var(--primary);" id="stat_obrat">0.00 €</div>
+            </div>
+            <div class="stat-box">
+                <div style="font-size:0.8em;color:var(--cp-color);" id="st_lbl_mat">Náklad materiál</div>
+                <div class="stat-val" style="color:var(--danger);" id="total_mat_cost">0.00 €</div>
+            </div>
+            <div class="stat-box">
+                <div style="font-size:0.8em;color:var(--cp-color);" id="st_lbl_ele">Náklad elektrina</div>
+                <div class="stat-val" style="color:var(--danger);" id="total_ele_cost">0.00 €</div>
+            </div>
+            <div class="stat-box">
+                <div style="font-size:0.8em;color:var(--cp-color);" id="st_lbl_oth">Ostatné náklady</div>
+                <div class="stat-val" style="color:var(--danger);" id="total_spent_other">0.00 €</div>
+            </div>
+            <div class="stat-box">
+                <div style="font-size:0.8em;color:var(--cp-color);" id="st_lbl_prof">Čistý Zisk</div>
+                <div class="stat-val" style="color:var(--success);" id="stat_profit">0.00 €</div>
+            </div>
+        </div>
     </div>
 </div>
 
-<div class="modal-overlay" id="info_overlay" onclick="closeInfo()"></div>
-<div class="modal-content" id="info_modal">
-    <h3 id="info_title" style="margin-top:0; color:var(--primary); border-bottom:1px solid var(--border); padding-bottom:10px;">ℹ️ INFO</h3>
-    <div id="info_text_content"></div>
-    <p style="font-size: 0.8em; text-align: center; color: var(--primary); margin-top: 20px;">Instagram: <b>3dee.tlac</b></p>
-    <button class="btn-add" id="btn_modal_close" onclick="closeInfo()">Zavrieť</button>
+<div class="overlay" id="cloud_overlay" onclick="closeCloudModal()"></div>
+<div class="modal" id="cloud_modal">
+    <h3 id="cloud_title">Cloud</h3>
+    <input type="text" id="cloud_nick" placeholder="Nick (meno)">
+    <input type="password" id="cloud_pass" placeholder="Heslo">
+    <button class="btn btn-add" id="cloud_action_btn" onclick="executeCloud()">Potvrdiť</button>
+    <div style="text-align:center; margin-top:10px; font-size:0.85em;">
+        <a href="#" onclick="registerUser()" style="color:var(--primary);" id="cloud_reg_link">Nemám účet - Vytvoriť</a>
+    </div>
+</div>
+
+<div class="overlay" id="info_overlay" onclick="closeInfo()"></div>
+<div class="modal" id="info_modal">
+    <h3 id="info_title">Informácie</h3>
+    <div class="info-content" id="info_content">
+        </div>
+    <button class="btn btn-cancel" style="display:block; width:100%;" onclick="closeInfo()" id="info_close_btn">Zavrieť</button>
 </div>
 <script>
-    const CLOUD_URL = "https://script.google.com/macros/s/AKfycbxYzW9mSnJWvxJfvj3QgHN9iiI2tWNIjYKAFbDkYvasUAj2Vwrcl2NNaVGqEpWtLPX2/exec";
-
-    let items = [];
-    let editingId = null;
-    let currentStatus = 'ok';
-    let isDark = true;
-    let loggedUserNick = "";
-    let totalUsersCount = 0;
-    let currentLang = 'sk';
-    let currentCurr = 'EUR';
-    const exchangeRate = 25.0; 
+    const CLOUD_URL = "https://script.google.com/macros/s/AKfycbye3X-D72Q4e2Jc1o4a_P5vK1q0_E98A53-D/exec"; // VLOŽ SVOJU URL
 
     const dict = {
         sk: {
-            title: "✚ NOVÁ TLAČ", edit: "✎ UPRAVIŤ TLAČ", cp: "CP (Ponuka)", ok: "OK (Výroba)",
-            type: "Typ záznamu", name: "Názov Projektu", w: "Váha/ks (g)", count: "Počet ks",
-            h: "Hodiny", m: "Minúty", price: "Predajná cena / 1 ks", per_pc: "na 1ks",
-            m_tot: "MATERIÁL SPOLU:", c_tot: "NÁKLAD:", p_tot: "ČISTÝ ZISK:",
-            save: "ULOŽIŤ DO HISTÓRIE", save_edit: "ULOŽIŤ ZMENY", cancel: "✖ ZRUŠIŤ ÚPRAVU", other: "✚ NÁKUP / INÉ VÝDAVKY",
-            b_back: "☁️ ZÁLOHOVAŤ", b_rest: "⬇️ OBNOVIŤ", b_reg: "👤 VYTVORIŤ ÚČET",
-            s_ok: "Vytlačené (OK)", s_time: "Čas Tlače", s_ord: "Zákazky", s_rev: "Obrat",
-            s_mat: "Materiál", s_ele: "Elektrina", s_oth: "Iné Extra", s_prof: "Čistý Zisk",
-            search: "🔍 Vyhľadať v histórii...", cost: "Náklad", sell: "Predaj", profit: "Zisk", buy: "Nákup / Výdavok",
-            p_nick: "Zadaj NICK (Prezývku):", p_pass: "Zadaj HESLO:", m_users: "Celkový počet užívateľov: ",
-            info_title: "ℹ️ INFO", close: "Zavrieť",
-            info_text: `<ul class="info-list"><li>Hobby nástroj na prepočítavanie 3D tlače.</li><li>Záloha ukladá dáta aj tvoje nastavenia cien a spotreby.</li><li>Obnova prebehne zadaním hesla cez tlačidlo OBNOVIŤ.</li></ul>`
+            title: "3Dee Pro", lbl_cfg_fil: "Filament (/kg)", lbl_cfg_ele: "Elektrina (/kWh)", lbl_cfg_watt: "Spotreba (W)",
+            lbl_name: "Názov zákazky", lbl_w: "Váha (gramy)", lbl_count: "Počet kusov", lbl_h: "Čas (Hodiny)", lbl_m: "Čas (Minúty)",
+            lbl_price_per: "Moja cena za 1 ks (Voliteľné)", lbl_sum: "Spolu za zákazku:", btn_add: "+ PRIDAŤ POLOŽKU",
+            btn_edit: "ULOŽIŤ ZMENY", btn_cancel: "ZRUŠIŤ", lbl_list: "Zoznam zákaziek", lbl_stats: "Celkové Štatistiky",
+            st_cp: "Cenová Ponuka", st_ok: "Hotovo (OK)", st_lbl_w: "Spotrebovaný plast", st_lbl_time: "Čas tlače",
+            st_lbl_orders: "Počet zákaziek", st_lbl_obrat: "Celkový Obrat", st_lbl_mat: "Náklad materiál",
+            st_lbl_ele: "Náklad elektrina", st_lbl_oth: "Ostatné náklady", st_lbl_prof: "Čistý Zisk",
+            m_users: "Celkom užívateľov v sieti:", m_btn_backup: "☁️ ZÁLOHOVAŤ", m_btn_restore: "🔄 OBNOVIŤ",
+            m_cloud: "Cloud Akcia", m_reg: "Nemám účet - Vytvoriť", m_pcs: "ks",
+            info_title: "Informácie", info_close: "Zavrieť",
+            info_text: `
+                <p>Hobby nástroj na prepočítavanie 3D tlače a ukladanie zákaziek.</p>
+                <p>Pre dlhodobé ukladanie zákaziek je potrebné si vytvoriť Nick a Heslo.</p>
+                <p>Keď máte vytvorené svoje konto, následne sa prihlasujete len cez vaše heslo tlačidlom <b>OBNOVIŤ</b> (odporúčame zvoliť komplexnejšie heslo).</p>
+                <p>Keď máte nahodené svoje položky, treba stlačiť <b>ZÁLOHOVAŤ</b>, aby sa zapísali do cloudu pod vaším účtom.</p>
+                <p>Refresh stránky vás vráti do anonymného režimu (bez účtu).</p>
+                <p>Návrat do účtu je opäť možný cez tlačidlo <b>OBNOVIŤ</b> a vaše heslo.</p>
+                <p>Instagram: <a href="https://instagram.com/3dee.tlac" target="_blank" style="color:var(--primary); font-weight:bold;">3dee.tlac</a></p>
+            `
+        },
+        cs: {
+            title: "3Dee Pro", lbl_cfg_fil: "Filament (/kg)", lbl_cfg_ele: "Elektřina (/kWh)", lbl_cfg_watt: "Spotřeba (W)",
+            lbl_name: "Název zakázky", lbl_w: "Váha (gramy)", lbl_count: "Počet kusů", lbl_h: "Čas (Hodiny)", lbl_m: "Čas (Minuty)",
+            lbl_price_per: "Moje cena za 1 ks (Volitelné)", lbl_sum: "Celkem za zakázku:", btn_add: "+ PŘIDAT POLOŽKU",
+            btn_edit: "ULOŽIT ZMĚNY", btn_cancel: "ZRUŠIT", lbl_list: "Seznam zakázek", lbl_stats: "Celkové Statistiky",
+            st_cp: "Cenová Nabídka", st_ok: "Hotovo (OK)", st_lbl_w: "Spotřebovaný plast", st_lbl_time: "Čas tisku",
+            st_lbl_orders: "Počet zakázek", st_lbl_obrat: "Celkový Obrat", st_lbl_mat: "Náklad materiál",
+            st_lbl_ele: "Náklad elektřina", st_lbl_oth: "Ostatní náklady", st_lbl_prof: "Čistý Zisk",
+            m_users: "Celkem uživatelů v síti:", m_btn_backup: "☁️ ZÁLOHOVAT", m_btn_restore: "🔄 OBNOVIT",
+            m_cloud: "Cloud Akce", m_reg: "Nemám účet - Vytvořit", m_pcs: "ks",
+            info_title: "Informace", info_close: "Zavřít",
+            info_text: `
+                <p>Hobby nástroj pro přepočítávání 3D tisku a ukládání zakázek.</p>
+                <p>Pro dlouhodobé ukládání zakázek je nutné si vytvořit Nick a Heslo.</p>
+                <p>Když máte vytvořené své konto, následně se přihlašujete pouze přes vaše heslo tlačítkem <b>OBNOVIT</b> (doporučujeme zvolit komplexnější heslo).</p>
+                <p>Když máte nahozené své položky, je třeba stisknout <b>ZÁLOHOVAT</b>, aby se zapsaly do cloudu pod vaším účtem.</p>
+                <p>Refresh stránky vás vrátí do anonymního režimu (bez účtu).</p>
+                <p>Návrat do účtu je opět možný přes tlačítko <b>OBNOVIT</b> a vaše heslo.</p>
+                <p>Instagram: <a href="https://instagram.com/3dee.tlac" target="_blank" style="color:var(--primary); font-weight:bold;">3dee.tlac</a></p>
+            `
         },
         en: {
-            title: "✚ NEW PRINT", edit: "✎ EDIT PRINT", cp: "Quote (CP)", ok: "Done (OK)",
-            type: "Record Type", name: "Project Name", w: "Weight/pc (g)", count: "Quantity",
-            h: "Hours", m: "Minutes", price: "Sell Price / 1 pc", per_pc: "per pc",
-            m_tot: "MATERIAL TOTAL:", c_tot: "COST:", p_tot: "NET PROFIT:",
-            save: "SAVE TO HISTORY", save_edit: "SAVE CHANGES", cancel: "✖ CANCEL EDIT", other: "✚ BUY / EXPENSE",
-            b_back: "☁️ BACKUP", b_rest: "⬇️ RESTORE", b_reg: "👤 CREATE USER",
-            s_ok: "Printed (OK)", s_time: "Print Time", s_ord: "Orders", s_rev: "Revenue",
-            s_mat: "Material", s_ele: "Electricity", s_oth: "Other Extra", s_prof: "Net Profit",
-            search: "🔍 Search history...", cost: "Cost", sell: "Sell", profit: "Profit", buy: "Purchase / Expense",
-            p_nick: "Enter NICK:", p_pass: "Enter PASSWORD:", m_users: "Total users: ",
-            info_title: "ℹ️ INFO", close: "Close",
-            info_text: `<ul class="info-list"><li>Hobby tool for 3D printing calculations.</li><li>Backup saves data and settings.</li></ul>`
-        },
-        cz: {
-            title: "✚ NOVÝ TISK", edit: "✎ UPRAVIT TISK", cp: "CP (Nabídka)", ok: "OK (Výroba)",
-            type: "Typ záznamu", name: "Název Projektu", w: "Váha/ks (g)", count: "Počet ks",
-            h: "Hodiny", m: "Minuty", price: "Prodejní cena / 1 ks", per_pc: "na 1ks",
-            m_tot: "MATERIÁL SPOLU:", c_tot: "NÁKLAD:", p_tot: "ČISTÝ ZISK:",
-            save: "ULOŽIT DO HISTORIE", save_edit: "ULOŽIT ZMĚNY", cancel: "✖ ZRUŠIT ÚPRAVU", other: "✚ NÁKUP / JINÉ VÝDAJE",
-            b_back: "☁️ ZÁLOHOVAT", b_rest: "⬇️ OBNOVIT", b_reg: "👤 VYTVOŘIT UŽIVATELE",
-            s_ok: "Vytištěno (OK)", s_time: "Čas Tisku", s_ord: "Zakázky", s_rev: "Obrat",
-            s_mat: "Materiál", s_ele: "Elektřina", s_oth: "Jiné Extra", s_prof: "Čistý Zisk",
-            search: "🔍 Vyhledat v historii...", cost: "Náklad", sell: "Prodej", profit: "Zisk", buy: "Nákup / Výdaj",
-            p_nick: "Zadej NICK:", p_pass: "Zadej HESLO:", m_users: "Celkem uživatelů: ",
-            info_title: "ℹ️ INFO", close: "Zavřít",
-            info_text: `<ul class="info-list"><li>Hobby nástroj pro přepočet 3D tisku.</li><li>Záloha ukládá data i nastavení.</li></ul>`
+            title: "3Dee Pro", lbl_cfg_fil: "Filament (/kg)", lbl_cfg_ele: "Electricity (/kWh)", lbl_cfg_watt: "Power (W)",
+            lbl_name: "Job Name", lbl_w: "Weight (grams)", lbl_count: "Pieces", lbl_h: "Time (Hours)", lbl_m: "Time (Minutes)",
+            lbl_price_per: "My price per piece (Optional)", lbl_sum: "Total for Job:", btn_add: "+ ADD ITEM",
+            btn_edit: "SAVE CHANGES", btn_cancel: "CANCEL", lbl_list: "Job List", lbl_stats: "Total Statistics",
+            st_cp: "Quotation", st_ok: "Done (OK)", st_lbl_w: "Consumed Plastic", st_lbl_time: "Print Time",
+            st_lbl_orders: "Total Orders", st_lbl_obrat: "Total Revenue", st_lbl_mat: "Material Cost",
+            st_lbl_ele: "Electricity Cost", st_lbl_oth: "Other Costs", st_lbl_prof: "Net Profit",
+            m_users: "Total users in network:", m_btn_backup: "☁️ BACKUP", m_btn_restore: "🔄 RESTORE",
+            m_cloud: "Cloud Action", m_reg: "No account - Create one", m_pcs: "pcs",
+            info_title: "Information", info_close: "Close",
+            info_text: `
+                <p>A hobby tool for calculating 3D printing costs and saving orders.</p>
+                <p>For long-term saving of orders, you need to create a Nickname and Password.</p>
+                <p>Once your account is created, you log in using only your password via the <b>RESTORE</b> button (we recommend a complex password).</p>
+                <p>When you have added your items, press <b>BACKUP</b> to save them to the cloud under your account.</p>
+                <p>Refreshing the page returns you to anonymous mode (without an account).</p>
+                <p>Returning to your account is possible again via the <b>RESTORE</b> button and your password.</p>
+                <p>Instagram: <a href="https://instagram.com/3dee.tlac" target="_blank" style="color:var(--primary); font-weight:bold;">3dee.tlac</a></p>
+            `
         }
     };
 
-    function getSym() { return currentCurr === 'EUR' ? '€' : 'Kč'; }
+    let items = [];
+    let currentStatus = 'cp';
+    let editingId = null;
+    let draggedId = null;
 
-    function toggleTheme() {
-        isDark = !isDark;
-        document.body.classList.toggle('light-theme', !isDark);
-        document.getElementById('btn_theme').innerText = isDark ? "🌙" : "☀️";
+    let currentTheme = localStorage.getItem('theme') || 'dark';
+    let currentLang = localStorage.getItem('lang') || 'sk';
+    let currentCurr = localStorage.getItem('curr') || 'EUR';
+
+    let cloudActionType = '';
+    let loggedUserNick = "";
+    let totalUsersCount = 0;
+    function applyTheme() {
+        if (currentTheme === 'light') { document.body.classList.add('light-theme'); document.getElementById('btn_theme').innerText = '☀️'; } 
+        else { document.body.classList.remove('light-theme'); document.getElementById('btn_theme').innerText = '🌙'; }
+        localStorage.setItem('theme', currentTheme);
     }
+    function toggleTheme() { currentTheme = currentTheme === 'dark' ? 'light' : 'dark'; applyTheme(); }
 
-    function setCurrency(c, silent = false) {
-        const old = currentCurr;
-        currentCurr = c;
-        document.getElementById('cur_eur').classList.toggle('active', c === 'EUR');
-        document.getElementById('cur_czk').classList.toggle('active', c === 'CZK');
-        if(!silent && old !== c) {
-            let f = document.getElementById('cfg_fil'), e = document.getElementById('cfg_ele');
-            if(c === 'CZK') { f.value = (f.value * exchangeRate).toFixed(0); e.value = (e.value * exchangeRate).toFixed(2); }
-            else { f.value = (f.value / exchangeRate).toFixed(0); e.value = (e.value / exchangeRate).toFixed(2); }
+    function setCurrency(c, noRefresh=false) {
+        currentCurr = c; localStorage.setItem('curr', c);
+        document.getElementById('btn_curr').innerText = c === 'EUR' ? '€' : 'Kč';
+        if(!noRefresh) refreshUI();
+    }
+    function toggleCurrency() { setCurrency(currentCurr === 'EUR' ? 'CZK' : 'EUR'); }
+
+    function setLang(l) {
+        currentLang = l; localStorage.setItem('lang', l);
+        document.getElementById('btn_lang').innerText = l.toUpperCase();
+        const d = dict[l];
+        for(let key in d) {
+            let el = document.getElementById(key);
+            if(el) { if(el.tagName === 'INPUT') el.placeholder = d[key]; else el.innerHTML = d[key]; }
         }
-        applyTexts(); updatePreview(); refreshUI();
-    }
-
-    function setLang(l) { currentLang = l; applyTexts(); refreshUI(); }
-
-    function applyTexts() {
-        const t = dict[currentLang]; const sym = getSym();
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('l_' + currentLang).classList.add('active');
-        const ids = {
-            'form_title': editingId ? t.edit : t.title, 'st_cp': t.cp, 'st_ok': t.ok, 'lbl_type': t.type, 'lbl_name': t.name, 'lbl_w': t.w, 'lbl_count': t.count, 'lbl_h': t.h, 'lbl_m': t.m,
-            'lbl_price': `${t.price} (${sym})`, 'lbl_mat_tot': t.m_tot, 'lbl_cost_tot': `${t.c_tot} (${sym})`, 'lbl_profit_tot': t.p_tot, 'btn_save': editingId ? t.save_edit : t.save,
-            'btn_cancel': t.cancel, 'btn_other': t.other, 'btn_backup': t.b_back, 'btn_restore': t.b_rest, 'btn_reg': t.b_reg, 'stat_lbl_ok': t.s_ok, 'stat_lbl_time': t.s_time,
-            'stat_lbl_ord': t.s_ord, 'stat_lbl_rev': t.s_rev, 'stat_lbl_mat': t.s_mat, 'stat_lbl_ele': t.s_ele, 'stat_lbl_other': t.s_oth, 'stat_lbl_profit': t.s_prof,
-            'info_title': t.info_title, 'btn_modal_close': t.close, 'cfg_lbl_fil': `${sym}/KG`, 'cfg_lbl_ele': `${sym}/KWH`, 'cfg_lbl_watt': 'WATT'
-        };
-        for (let id in ids) if(document.getElementById(id)) document.getElementById(id).innerText = ids[id];
-        document.getElementById('info_text_content').innerHTML = t.info_text;
-        document.getElementById('search_input').placeholder = t.search;
         updateUserDisplay();
+        refreshUI();
     }
+    function toggleLang() { const langs = ['sk', 'cs', 'en']; setLang(langs[(langs.indexOf(currentLang) + 1) % 3]); }
 
-    function updateClock() {
-        const now = new Date();
-        document.getElementById('live-clock').innerText = now.toLocaleTimeString('sk-SK');
-        document.getElementById('live-date').innerHTML = now.toLocaleDateString('sk-SK', {weekday:'long', day:'2-digit', month:'long'}) + ` <button class="btn-info" onclick="openInfo()">i</button>`;
-    }
-    setInterval(updateClock, 1000); updateClock();
-
-    function updatePreview(auto = true) {
-        const w = parseFloat(document.getElementById('in_w').value) || 0;
-        const c = parseInt(document.getElementById('in_count').value) || 1;
-        const h = parseFloat(document.getElementById('in_h').value) || 0;
-        const m = parseFloat(document.getElementById('in_m').value) || 0;
-        const p = parseFloat(document.getElementById('in_price_per').value) || 0;
-        const f = parseFloat(document.getElementById('cfg_fil').value) || 19;
-        const e = parseFloat(document.getElementById('cfg_ele').value) || 0.19;
-        const watt = parseFloat(document.getElementById('cfg_watt').value) || 120; // Prepojené na nové WATT pole
-
-        const totalW = w * c, totalMins = (h * 60 + m) * c;
-        const matC = (totalW / 1000) * f, eleC = (totalMins / 60) * (watt / 1000) * e;
-
-        if(auto) document.getElementById('view_total_cost').value = (matC + eleC).toFixed(2);
-        const cost = parseFloat(document.getElementById('view_total_cost').value) || 0;
-        const profit = (p * c - cost);
+    function calcItem(w, count, h, m, override_per) {
+        let fil_p = parseFloat(document.getElementById('cfg_fil').value) || 0;
+        let ele_p = parseFloat(document.getElementById('cfg_ele').value) || 0;
+        let watt = parseFloat(document.getElementById('cfg_watt').value) || 120;
         
-        document.getElementById('view_total_w').innerText = totalW.toFixed(0) + " g";
-        document.getElementById('view_total_profit').innerText = profit.toFixed(2) + " " + getSym();
-        return { totalW, totalMins, matC, eleC, cost, totalSell: p * c, w, c, h, m, p, profit };
+        if (currentCurr === 'CZK') { fil_p /= 25; ele_p /= 25; }
+        
+        const matC = (w / 1000) * fil_p;
+        const totalMins = (h * 60) + m;
+        const eleC = (totalMins / 60) * (watt / 1000) * ele_p;
+        const baseCost = (matC + eleC) * count;
+
+        let finalPer = override_per > 0 ? override_per : ((matC + eleC) * 2.5); // 2.5 nasobok ako zaklad
+        if (currentCurr === 'CZK' && override_per > 0) finalPer /= 25;
+
+        return {
+            matCost: matC * count, eleCost: eleC * count, 
+            finalTotal: finalPer * count, finalPer: finalPer
+        };
+    }
+
+    function updatePreview() {
+        let w = parseFloat(document.getElementById('in_w').value) || 0;
+        let count = parseInt(document.getElementById('in_count').value) || 1;
+        let h = parseInt(document.getElementById('in_h').value) || 0;
+        let m = parseInt(document.getElementById('in_m').value) || 0;
+        let override = parseFloat(document.getElementById('in_price_per').value) || 0;
+
+        let res = calcItem(w, count, h, m, override);
+        let sym = currentCurr === 'EUR' ? '€' : 'Kč';
+        let mult = currentCurr === 'EUR' ? 1 : 25;
+
+        document.getElementById('sum_val').innerText = (res.finalTotal * mult).toFixed(2) + " " + sym;
+        document.getElementById('sum_pcs_display').innerText = (res.finalPer * mult).toFixed(2) + " " + sym + " / " + dict[currentLang].m_pcs;
     }
 
     function saveItem() {
-        const calc = updatePreview(false);
-        const newItem = {
-            id: editingId || Date.now(), type: 'print', status: currentStatus,
-            name: document.getElementById('in_name').value || "Bez názvu",
-            sell: Number(calc.totalSell), cost: Number(calc.cost), matCost: Number(calc.matC), eleCost: Number(calc.eleC),
-            profit: Number(calc.profit), totalW: Number(calc.totalW), mins: Number(calc.totalMins),
-            weight: Number(calc.w), count: Number(calc.c), h: Number(calc.h), m: Number(calc.m), pricePer: Number(calc.p),
-            date: new Date().toLocaleString(), currency: currentCurr
-        };
-        if(editingId) items = items.map(i => i.id === editingId ? newItem : i);
-        else items.unshift(newItem);
-        clearForm();
+        let n = document.getElementById('in_name').value || dict[currentLang].lbl_name;
+        let w = parseFloat(document.getElementById('in_w').value) || 0;
+        let c = parseInt(document.getElementById('in_count').value) || 1;
+        let h = parseInt(document.getElementById('in_h').value) || 0;
+        let m = parseInt(document.getElementById('in_m').value) || 0;
+        let pr = parseFloat(document.getElementById('in_price_per').value) || 0;
+
+        let obj = { id: Date.now(), status: currentStatus, name: n, w: w, count: c, h: h, m: m, override_per: pr };
+        items.unshift(obj);
+        
+        document.getElementById('in_name').value = ''; document.getElementById('in_price_per').value = '';
+        refreshUI();
     }
 
     function editItem(id) {
-        const i = items.find(x => x.id === id); if(!i) return;
-        editingId = id; setStatus(i.status || 'ok');
-        document.getElementById('in_name').value = i.name;
-        document.getElementById('in_w').value = i.weight;
-        document.getElementById('in_count').value = i.count;
-        document.getElementById('in_h').value = i.h;
-        document.getElementById('in_m').value = i.m;
-        document.getElementById('in_price_per').value = i.pricePer;
-        document.getElementById('view_total_cost').value = i.cost;
-        document.getElementById('btn_save').classList.add('is-active-edit');
-        document.getElementById('btn_cancel').style.display = "block";
-        document.getElementById('btn_other').style.display = "none";
-        applyTexts(); window.scrollTo({top: 0, behavior: 'smooth'}); refreshUI();
+        let item = items.find(i => i.id === id); if(!item) return;
+        editingId = id;
+        document.getElementById('in_name').value = item.name;
+        document.getElementById('in_w').value = item.w;
+        document.getElementById('in_count').value = item.count;
+        document.getElementById('in_h').value = item.h;
+        document.getElementById('in_m').value = item.m;
+        document.getElementById('in_price_per').value = item.override_per || "";
+        setStatus(item.status);
+        
+        document.getElementById('btn_action').style.display = 'none';
+        document.getElementById('btn_save_edit').style.display = 'block';
+        document.getElementById('btn_cancel_edit').style.display = 'block';
+        updatePreview();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        refreshUI();
     }
 
-    function clearForm() {
+    function saveEdit() {
+        let item = items.find(i => i.id === editingId); if(!item) return;
+        item.name = document.getElementById('in_name').value;
+        item.w = parseFloat(document.getElementById('in_w').value) || 0;
+        item.count = parseInt(document.getElementById('in_count').value) || 1;
+        item.h = parseInt(document.getElementById('in_h').value) || 0;
+        item.m = parseInt(document.getElementById('in_m').value) || 0;
+        item.override_per = parseFloat(document.getElementById('in_price_per').value) || 0;
+        item.status = currentStatus;
+        cancelEdit();
+    }
+
+    function cancelEdit() {
         editingId = null;
-        ['in_name', 'in_w', 'in_h', 'in_m', 'in_price_per'].forEach(id => document.getElementById(id).value = "");
-        document.getElementById('in_count').value = "1";
-        document.getElementById('btn_save').classList.remove('is-active-edit');
-        document.getElementById('btn_cancel').style.display = "none";
-        document.getElementById('btn_other').style.display = "block";
-        applyTexts(); updatePreview(); refreshUI();
+        document.getElementById('in_name').value = ''; document.getElementById('in_price_per').value = '';
+        document.getElementById('btn_action').style.display = 'block';
+        document.getElementById('btn_save_edit').style.display = 'none';
+        document.getElementById('btn_cancel_edit').style.display = 'none';
+        refreshUI();
     }
 
-    function deleteItem(id) { if(confirm("Zmazať?")) { items = items.filter(i => i.id !== id); refreshUI(); } }
-    function duplicateItem(id) { const i = items.find(x => x.id === id); items.unshift({...i, id: Date.now(), date: new Date().toLocaleString()}); refreshUI(); }
-    function toggleItemStatus(id) { items = items.map(i => i.id === id ? {...i, status: i.status === 'ok' ? 'cp' : 'ok'} : i); refreshUI(); }
+    function deleteItem(id) { if(confirm("Vymazať položku?")) { items = items.filter(i => i.id !== id); refreshUI(); } }
     
-    function addOtherItem() {
-        const n = prompt("Názov:"); if(!n) return;
-        const valStr = prompt("Suma (+ predaj, - výdavok):"); if(!valStr) return;
-        const v = parseFloat(valStr.replace(',','.')); if(isNaN(v)) return;
-        items.unshift({id:Date.now(), type:'buy', status:'ok', name:n, sell: v>0?v:0, cost: v<0?Math.abs(v):0, profit:v, date: new Date().toLocaleString(), currency: currentCurr});
+    function duplicateItem(id) {
+        let item = items.find(i => i.id === id); if(!item) return;
+        let copy = JSON.parse(JSON.stringify(item));
+        copy.id = Date.now(); copy.name = copy.name + " (Kópia)";
+        items.unshift(copy); refreshUI();
+    }
+
+    function toggleItemStatus(id) {
+        let item = items.find(i => i.id === id); if(!item) return;
+        item.status = item.status === 'cp' ? 'ok' : 'cp'; refreshUI();
+    }
+
+    // DRAG AND DROP
+    function dragStart(e, id) { draggedId = id; e.dataTransfer.effectAllowed = 'move'; setTimeout(() => e.target.style.opacity = '0.5', 0); }
+    function dragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; let target = e.target.closest('.job-item'); if(target) target.classList.add('drag-over'); }
+    function dragLeave(e) { let target = e.target.closest('.job-item'); if(target) target.classList.remove('drag-over'); }
+    function drop(e, targetId) {
+        e.preventDefault(); let target = e.target.closest('.job-item'); if(target) target.classList.remove('drag-over');
+        if(draggedId === targetId) return;
+        let draggedIndex = items.findIndex(i => i.id === draggedId);
+        let targetIndex = items.findIndex(i => i.id === targetId);
+        let movedItem = items.splice(draggedIndex, 1)[0];
+        items.splice(targetIndex, 0, movedItem);
         refreshUI();
     }
-    // --- DRAG & DROP LOGIKA ---
-    function moveListItem(id, action) {
-        const idx = items.findIndex(i => i.id === id); if (idx < 0) return;
-        const item = items.splice(idx, 1)[0];
-        if (action === 'top') items.unshift(item); else items.push(item);
-        refreshUI();
-    }
-    function handleDragStart(e, id) { e.dataTransfer.setData('text/plain', id); e.target.style.opacity = '0.5'; }
-    function handleDragOver(e) { e.preventDefault(); e.target.closest('.job-card')?.classList.add('drag-over'); }
-    function handleDragLeave(e) { e.target.closest('.job-card')?.classList.remove('drag-over'); }
-    function handleDrop(e, targetId) {
-        e.preventDefault(); e.target.closest('.job-card')?.classList.remove('drag-over');
-        const draggedId = Number(e.dataTransfer.getData('text/plain'));
-        if (draggedId && draggedId !== targetId) {
-            const from = items.findIndex(i => i.id === draggedId);
-            const to = items.findIndex(i => i.id === targetId);
-            if (from >= 0 && to >= 0) {
-                const item = items.splice(from, 1)[0];
-                items.splice(to, 0, item);
-                refreshUI();
-            }
-        }
-    }
-    function handleDragEnd(e) { e.target.style.opacity = '1'; document.querySelectorAll('.job-card').forEach(c => c.classList.remove('drag-over')); }
+    function dragEnd(e) { e.target.style.opacity = '1'; draggedId = null; }
 
     function refreshUI() {
-        const container = document.getElementById('list_container');
-        const query = document.getElementById('search_input').value.toLowerCase();
-        container.innerHTML = ""; const t = dict[currentLang]; const sym = getSym();
-        let s_kg=0, s_time=0, s_ord=0, s_rev=0, s_mat=0, s_ele=0, s_prof=0, s_oth=0;
+        let container = document.getElementById('job_list'); container.innerHTML = '';
+        let sym = currentCurr === 'EUR' ? '€' : 'Kč'; let mult = currentCurr === 'EUR' ? 1 : 25;
+
+        let s_kg=0, s_time=0, s_ord=0, s_rev=0, s_mat=0, s_ele=0, s_oth=0, s_prof=0;
 
         items.forEach(i => {
-            let dCost = i.cost, dSell = i.sell, dProfit = i.profit;
-            if (i.currency === 'EUR' && currentCurr === 'CZK') { dCost *= exchangeRate; dSell *= exchangeRate; dProfit *= exchangeRate; }
-            else if (i.currency === 'CZK' && currentCurr === 'EUR') { dCost /= exchangeRate; dSell /= exchangeRate; dProfit /= exchangeRate; }
-
-            if(i.status === 'ok') {
-                s_rev += dSell; s_prof += dProfit;
-                if(i.type === 'print') { 
-                    s_kg += (i.totalW || 0); s_time += (i.mins || 0); s_ord++; 
-                    if(i.currency === currentCurr) { s_mat += (i.matCost || 0); s_ele += (i.eleCost || 0); }
-                    else if(currentCurr === 'CZK') { s_mat += (i.matCost * exchangeRate); s_ele += (i.eleCost * exchangeRate); }
-                    else { s_mat += (i.matCost / exchangeRate); s_ele += (i.eleCost / exchangeRate); }
-                } else { s_oth += dCost; }
+            let res = calcItem(i.w, i.count, i.h, i.m, i.override_per);
+            if (i.status === 'ok') {
+                s_kg += i.w * i.count; s_time += ((i.h*60)+i.m)*i.count; s_ord += i.count;
+                s_rev += (res.finalTotal * mult); s_mat += (res.matCost * mult); s_ele += (res.eleCost * mult);
+                s_prof += ((res.finalTotal - res.matCost - res.eleCost) * mult);
             }
-            if(!i.name.toLowerCase().includes(query)) return;
-
-            const isEditing = editingId === i.id;
-            const isCP = i.status === 'cp';
-            const count = i.count || 1;
-            const costPer = dCost / count; // Pridaný výpočet na 1 kus pre NÁKLAD
-            const sellPer = dSell / count; // Pridaný výpočet na 1 kus pre PREDAJ
-
-            const card = document.createElement('div');
-            card.className = `job-card type-${i.type} ${isEditing ? 'is-editing' : ''} ${isCP ? 'is-cp' : ''}`;
-            card.draggable = true;
-            card.ondragstart = (e) => handleDragStart(e, i.id);
-            card.ondragover = handleDragOver;
-            card.ondragleave = handleDragLeave;
-            card.ondrop = (e) => handleDrop(e, i.id);
-            card.ondragend = handleDragEnd;
             
-            // HTML Záznamu (Karty) bolo aktualizované o prepočet (X.XX / na 1ks)
+            let isCP = i.status === 'cp';
+            let isEditing = editingId === i.id;
+            let w_text = (i.w * i.count) + "g";
+            let t_text = Math.floor(((i.h*60)+i.m)*i.count/60) + "h " + (((i.h*60)+i.m)*i.count%60) + "m";
+            
+            // Text pocet kusov (napr. 3 ks)
+            let pcsText = `${i.count} ${dict[currentLang].m_pcs}`;
+
+            let card = document.createElement('div');
+            card.className = 'job-item';
+            card.draggable = true;
+            card.ondragstart = (e) => dragStart(e, i.id); card.ondragover = dragOver; card.ondragleave = dragLeave;
+            card.ondrop = (e) => drop(e, i.id); card.ondragend = dragEnd;
+
             card.innerHTML = `
-                <div class="sort-controls">
-                    <div class="sc-btn" onclick="moveListItem(${i.id}, 'top')">▲</div>
-                    <div class="sc-btn sc-drag">=</div>
-                    <div class="sc-btn" onclick="moveListItem(${i.id}, 'bottom')">▼</div>
-                </div>
-                <div class="job-info"><span class="job-name">${i.name} <span class="job-tag ${isCP?'tag-cp':'tag-ok'}">${isCP?'CP':'OK'}</span></span>
-                <div style="font-size:0.65em; color:#888; font-weight:bold;">${(i.totalW||0).toFixed(0)}g | ${Math.floor((i.mins||0)/60)}h ${(i.mins||0)%60}m</div></div>
-                <div class="job-data">
-                    <div class="data-item">
-                        <span class="data-label">${t.cost}</span>
-                        <span class="data-val" style="color:var(--danger)">${dCost.toFixed(2)}${sym}</span>
-                        <span class="val-per-pc">(${costPer.toFixed(2)}${sym} / ${t.per_pc})</span>
+                <div class="job-info" style="opacity: ${isCP ? '0.6' : '1'};">
+                    <div style="font-weight:bold;font-size:1.1em;margin-bottom:5px;word-break:break-all;">
+                        ${i.name} <span style="font-size:0.8em; color:var(--primary);">(${pcsText})</span>
                     </div>
-                    <div class="data-item">
-                        <span class="data-label">${t.sell}</span>
-                        <span class="data-val" style="color:var(--primary)">${dSell.toFixed(2)}${sym}</span>
-                        <span class="val-per-pc">(${sellPer.toFixed(2)}${sym} / ${t.per_pc})</span>
+                    <div style="font-size:0.85em;color:var(--cp-color);margin-bottom:5px;">${w_text} | ${t_text}</div>
+                    <div style="color:${isCP ? 'var(--cp-color)' : 'var(--success)'}; font-weight:bold; font-size:1.1em;">
+                        ${(res.finalTotal * mult).toFixed(2)} ${sym} 
+                        <span style="font-size:0.7em;font-weight:normal;color:var(--cp-color);">(${(res.finalPer * mult).toFixed(2)} ${sym}/${dict[currentLang].m_pcs})</span>
                     </div>
                 </div>
-                <div class="job-profit"><span class="profit-label">${t.profit}</span><span style="color:${dProfit>=0?'var(--success)':'var(--danger)'}">${dProfit.toFixed(2)}${sym}</span></div>
-                <div class="actions"><button class="action-btn ${isCP?'':'active-status'}" onclick="toggleItemStatus(${i.id})">${isCP?'CP':'OK'}</button>
-                <button class="action-btn" onclick="duplicateItem(${i.id})">❐</button><button class="action-btn ${isEditing?'is-active-edit':''}" onclick="editItem(${i.id})">✎</button><button class="action-btn" onclick="deleteItem(${i.id})">🗑</button></div>`;
+                <div class="job-actions">
+                    <button class="action-btn btn-status ${isCP ? 'cp' : 'ok'}" onclick="toggleItemStatus(${i.id})">${isCP?'CP':'OK'}</button>
+                    <button class="action-btn" onclick="duplicateItem(${i.id})">❐</button>
+                    <button class="action-btn ${isEditing ? 'is-active-edit' : ''}" onclick="editItem(${i.id})">✎</button>
+                    <button class="action-btn" onclick="deleteItem(${i.id})">🗑</button>
+                </div>
+            `;
             container.appendChild(card);
         });
 
@@ -511,36 +504,60 @@
         document.getElementById('total_ele_cost').innerText = s_ele.toFixed(2) + " " + sym;
         document.getElementById('total_spent_other').innerText = s_oth.toFixed(2) + " " + sym;
         document.getElementById('stat_profit').innerText = s_prof.toFixed(2) + " " + sym;
+        
+        updatePreview();
     }
 
-    async function handleCloud(action) {
-        const t = dict[currentLang]; let pass, nick;
-        if(action === 'register') { nick = prompt(t.p_nick); if(!nick) return; pass = prompt(t.p_pass); if(!pass) return; }
-        else { pass = prompt(t.p_pass); if(!pass) return; }
-        const btn = document.getElementById(action === 'register' ? 'btn_reg' : (action === 'backup' ? 'btn_backup' : 'btn_restore'));
-        const origText = btn.innerText; btn.innerText = "⏳...";
+    ['in_w','in_count','in_h','in_m','in_price_per','cfg_fil','cfg_ele','cfg_watt'].forEach(id => {
+        document.getElementById(id).addEventListener('input', () => updatePreview());
+    });
+
+    function openCloudModal(type) { 
+        cloudActionType = type; 
+        document.getElementById('cloud_title').innerText = type === 'backup' ? dict[currentLang].m_btn_backup : dict[currentLang].m_btn_restore;
+        document.getElementById('cloud_overlay').style.display = 'block'; 
+        document.getElementById('cloud_modal').style.display = 'block'; 
+    }
+    function closeCloudModal() { document.getElementById('cloud_overlay').style.display = 'none'; document.getElementById('cloud_modal').style.display = 'none'; }
+    
+    function getSettings() {
+        return {
+            fil: document.getElementById('cfg_fil').value, ele: document.getElementById('cfg_ele').value,
+            watt: document.getElementById('cfg_watt').value, lang: currentLang, curr: currentCurr
+        };
+    }
+
+    async function registerUser() {
+        let nick = document.getElementById('cloud_nick').value.trim();
+        let pass = document.getElementById('cloud_pass').value.trim();
+        if(!nick || !pass) return alert("Zadaj Nick aj Heslo pre registráciu.");
+        try {
+            let res = await fetch(CLOUD_URL, { method: 'POST', body: JSON.stringify({ action: "register", nick: nick, pass: pass }) });
+            let d = await res.json(); alert(d.message);
+        } catch(e) { alert("Chyba spojenia s Cloudom."); }
+    }
+
+    async function executeCloud() {
+        let nick = document.getElementById('cloud_nick').value.trim();
+        let pass = document.getElementById('cloud_pass').value.trim();
+        if(!pass) return alert("Zadaj heslo!");
+        let btn = document.getElementById('cloud_action_btn'); let origText = btn.innerText; btn.innerText = "...";
         
         try {
-            if(action === 'register') {
-                const res = await fetch(CLOUD_URL, { method: 'POST', body: JSON.stringify({action: 'register', nick: nick, pass: pass}) });
-                const d = await res.json(); alert(d.message); if(!d.error) { loggedUserNick = nick; updateUserDisplay(); }
-            } else if(action === 'backup') {
-                // Posielame kompletne všetky aktuálne nastavenia aplikácie priamo do Cloudu
-                const settings = { fil: document.getElementById('cfg_fil').value, ele: document.getElementById('cfg_ele').value, watt: document.getElementById('cfg_watt').value, lang: currentLang, curr: currentCurr };
-                const res = await fetch(CLOUD_URL, { method: 'POST', body: JSON.stringify({action: 'backup', pass: pass, data: items, settings: settings}) });
-                const d = await res.json(); alert(d.message);
-            } else if(action === 'restore') {
-                const res = await fetch(`${CLOUD_URL}?action=restore&pass=${encodeURIComponent(pass)}`);
-                const d = await res.json();
-                if (d.error) alert(d.message); else {
-                    items = d.data || []; loggedUserNick = d.nick; totalUsersCount = d.userCount;
-                    // Ak záloha obsahovala nastavenia (zo staršej verzie užívateľa), aplikujeme ich naspäť
+            if (cloudActionType === 'backup') {
+                let res = await fetch(CLOUD_URL, { method: 'POST', body: JSON.stringify({ action: "backup", pass: pass, data: items, settings: getSettings() }) });
+                let d = await res.json(); alert(d.message); closeCloudModal();
+            } else {
+                let res = await fetch(`${CLOUD_URL}?action=restore&pass=${pass}`);
+                let d = await res.json();
+                if(d.error) alert(d.message);
+                else {
+                    items = d.data; loggedUserNick = d.nick; totalUsersCount = d.userCount; closeCloudModal();
                     if(d.settings) {
-                        document.getElementById('cfg_fil').value = d.settings.fil || 19; 
-                        document.getElementById('cfg_ele').value = d.settings.ele || 0.19;
-                        document.getElementById('cfg_watt').value = d.settings.watt || 120; // Načítanie spotreby (WATT)
-                        currentLang = d.settings.lang || 'sk'; 
-                        currentCurr = d.settings.curr || 'EUR';
+                        if(d.settings.fil) document.getElementById('cfg_fil').value = d.settings.fil;
+                        if(d.settings.ele) document.getElementById('cfg_ele').value = d.settings.ele;
+                        if(d.settings.watt) document.getElementById('cfg_watt').value = d.settings.watt;
+                        currentLang = d.settings.lang || 'sk'; currentCurr = d.settings.curr || 'EUR';
                         setCurrency(currentCurr, true); setLang(currentLang);
                     }
                     refreshUI(); updateUserDisplay(); alert("Záloha a nastavenia boli úspešne obnovené.");
@@ -555,11 +572,7 @@
     function setStatus(s) { currentStatus = s; document.getElementById('st_cp').classList.toggle('active', s === 'cp'); document.getElementById('st_ok').classList.toggle('active', s === 'ok'); }
     function updateUserDisplay() { document.getElementById('user_display').innerText = loggedUserNick ? `👤 ${loggedUserNick}` : ""; document.getElementById('total_users_display').innerText = `${dict[currentLang].m_users} ${totalUsersCount}`; }
 
-    ['in_w','in_count','in_h','in_m','in_price_per','cfg_fil','cfg_ele','cfg_watt'].forEach(id => {
-        document.getElementById(id).addEventListener('input', () => updatePreview());
-    });
-
-    window.onload = () => { applyTexts(); updatePreview(); refreshUI(); };
+    applyTheme(); setLang(currentLang); setCurrency(currentCurr);
 </script>
 </body>
 </html>
