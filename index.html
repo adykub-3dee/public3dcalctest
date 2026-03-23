@@ -19,10 +19,16 @@
             --btn-bg: #eeeeee; --job-bg: #fdfdfd;
         }
 
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); padding: 10px; margin: 0; transition: background 0.3s, color 0.3s; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); padding: 10px; margin: 0; transition: background 0.3s, color 0.3s; overflow-x: hidden; }
         
         #user_display { font-size: 0.8em; color: var(--success); font-weight: bold; margin-bottom: 5px; text-transform: uppercase; min-height: 1.2em; }
-        #total_users_display { position: fixed; bottom: 5px; left: 10px; font-size: 0.7em; color: #888; font-weight: bold; z-index: 100; background: var(--bg); padding: 2px 5px; border-radius: 4px; }
+        
+        /* OPRAVA: Počítadlo užívateľov nebude blokovať dotyky */
+        #total_users_display { 
+            position: fixed; bottom: 5px; left: 10px; font-size: 0.7em; color: #888; font-weight: bold; 
+            z-index: 50; background: var(--bg); padding: 2px 5px; border-radius: 4px; 
+            pointer-events: none; opacity: 0.8; 
+        }
 
         .header { width: 100%; max-width: 1200px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 12px; margin: 0 auto 15px auto; gap: 10px; }
         .header-center { flex-grow: 1; text-align: center; }
@@ -39,11 +45,15 @@
 
         .btn-info { background: transparent; color: var(--primary); border: 1px solid var(--primary); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 0.7em; cursor: pointer; font-weight: bold; margin-left: 5px;}
 
-        .main-layout { width: 100%; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 20px; }
-        @media (min-width: 768px) { .main-layout { grid-template-columns: 340px 1fr; } }
+        .main-layout { width: 100%; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 20px; padding-bottom: 60px; }
+        
+        /* STICKY LEN PRE DESKTOP - Na mobile by to prekrývalo zoznam */
+        @media (min-width: 768px) { 
+            .main-layout { grid-template-columns: 340px 1fr; } 
+            .sticky { position: sticky; top: 15px; z-index: 10; }
+        }
 
         .panel { background: var(--card); border-radius: 16px; padding: 20px; border: 1px solid var(--border); transition: all 0.3s; }
-        .sticky { position: sticky; top: 15px; z-index: 10; }
 
         label { display: block; font-size: 0.65em; color: #888; text-transform: uppercase; margin-bottom: 4px; font-weight: 600; }
         input { width: 100%; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text); padding: 10px; border-radius: 8px; box-sizing: border-box; font-size: 16px; margin-bottom: 8px; outline: none; }
@@ -83,505 +93,496 @@
         .search-input { width: 100%; background: var(--job-bg); border: 2px solid var(--primary); color: var(--text); padding: 12px; border-radius: 10px; font-weight: bold; box-sizing: border-box; margin-bottom: 15px; }
 
         .job-card { background: #111; border: 1px solid #333; border-radius: 12px; margin-bottom: 10px; display: flex; align-items: center; overflow: hidden; position: relative; transition: 0.2s; }
-        .job-card.is-editing { border: 2px solid var(--accent) !important; background: rgba(255, 204, 0, 0.15) !important; }
-        .job-card.is-cp { opacity: 0.8; border-style: dashed; }
-        .job-card.drag-over { border: 2px dashed var(--primary); transform: scale(1.02); }
+        .job-card.is-editing { border: 2px solid var(--accent); box-shadow: 0 0 15px var(--accent); animation: pulse 1.5s infinite; }
+        .job-card.is-cp { border-left: 5px solid var(--cp-color); opacity: 0.85; }
+        .job-card.is-ok { border-left: 5px solid var(--success); }
+        .job-card.type-buy { border-left: 5px solid var(--danger); background: rgba(255, 62, 62, 0.05); }
+
+        .sort-controls { display: flex; flex-direction: column; background: #222; border-right: 1px solid #333; align-self: stretch; justify-content: center; }
+        .sort-btn { padding: 10px; color: #666; cursor: pointer; font-size: 1.2em; text-align: center; }
+        .sort-btn:hover { color: var(--primary); }
+
+        .job-info { flex-grow: 1; padding: 12px; }
+        .job-name { font-weight: 900; font-size: 1.05em; margin-bottom: 2px; }
+        .job-date { font-size: 0.65em; color: #666; font-weight: bold; }
+
+        .job-data { display: flex; gap: 15px; margin-top: 8px; font-size: 0.8em; color: #aaa; }
+        .job-data strong { color: var(--text); }
+
+        .job-profit { border-left: 1px solid #222; padding: 12px; text-align: right; min-width: 80px; }
+        .profit-val { font-size: 1.1em; font-weight: 900; color: var(--success); }
+        .cost-val { font-size: 0.7em; color: var(--danger); opacity: 0.7; }
+
+        .actions { padding: 10px; display: flex; gap: 5px; }
+        .action-btn { background: var(--btn-bg); border: 1px solid var(--border); color: var(--text); padding: 8px; border-radius: 6px; cursor: pointer; font-size: 0.9em; transition: 0.2s; }
+        .action-btn:hover { border-color: var(--primary); }
+        .is-active-edit { background: var(--accent); color: #000; border-color: #000; }
+
+        .is-cp-status { background: var(--cp-color); color: #000; font-weight: 800; border: none; }
+        .is-ok-status { background: var(--success); color: #000; font-weight: 800; border: none; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999; display: none; }
+        .modal-content { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card); border: 2px solid var(--primary); padding: 20px; border-radius: 16px; width: 90%; max-width: 400px; z-index: 1000; display: none; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px;}
         
-        .type-buy { border-left: 5px solid var(--danger); }
-        .type-print { border-left: 5px solid var(--primary); }
-
-        .sort-controls { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px; border-right: 1px solid var(--border); }
-        .sc-btn { font-size: 0.9em; cursor: pointer; color: #888; transition: 0.2s; user-select: none; }
-        .sc-drag { font-weight: bold; font-size: 1.3em; cursor: grab; padding: 2px; }
-
-        .job-info { flex: 1; padding: 10px; min-width: 100px; overflow: hidden; }
-        .job-name { font-weight: bold; display: block; font-size: 1em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .job-tag { font-size: 0.55em; padding: 1px 4px; border-radius: 4px; margin-left: 5px; vertical-align: middle; }
-        .tag-cp { background: #666; color: #fff; }
-        .tag-ok { background: var(--success); color: #000; }
-
-        .job-data { display: flex; gap: 10px; text-align: right; padding: 10px; }
-        .data-item { display: flex; flex-direction: column; min-width: 75px; }
-        .data-label { font-size: 0.55em; color: #888; text-transform: uppercase; }
-        .data-val { font-size: 0.9em; font-weight: bold; }
-        .val-per-pc { font-size: 0.65em; font-weight: normal; color: #888; margin-top: 1px; }
-
-        .job-profit { min-width: 80px; text-align: right; font-weight: 900; font-size: 1.1em; border-left: 1px solid var(--border); padding: 10px; display: flex; flex-direction: column; justify-content: center; }
-        .profit-label { font-size: 0.45em; display: block; color: #888; text-transform: uppercase; }
-        
-        .actions { display: flex; gap: 4px; padding: 8px; }
-        .action-btn { background: var(--btn-bg); border: 1px solid var(--border); color: #888; cursor: pointer; padding: 6px; border-radius: 6px; transition: 0.3s; font-size: 0.9em; }
-        .action-btn.active-status { background: var(--success); color: #000; border-color: var(--success); }
-        .action-btn.is-active-edit { background: var(--accent) !important; color: #000 !important; animation: pulse-edit 1.5s infinite; }
-
-        @keyframes pulse-edit { 0% { box-shadow: 0 0 5px var(--accent); } 50% { box-shadow: 0 0 12px var(--accent); } 100% { box-shadow: 0 0 5px var(--accent); } }
-
-        @media (max-width: 600px) {
-            .job-card { flex-wrap: wrap; padding-bottom: 0; }
-            .sort-controls { padding: 5px; order: 1; border-right: none; border-bottom: 1px solid #222; width: 100%; flex-direction: row; justify-content: center; height: 30px; }
-            .job-info { order: 2; flex: 1 1 60%; padding: 8px; }
-            .job-profit { order: 3; flex: 1 1 30%; border-left: none; padding: 8px; border-bottom: 1px solid #222; }
-            .job-data { order: 4; flex: 1 1 100%; justify-content: space-around; background: rgba(0,0,0,0.2); border-bottom: 1px solid #222; padding: 6px; }
-            .actions { order: 5; flex: 1 1 100%; justify-content: center; padding: 8px; }
-            .data-item { min-width: auto; text-align: center; }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 5px var(--accent); }
+            50% { box-shadow: 0 0 12px var(--accent); }
+            100% { box-shadow: 0 0 5px var(--accent); }
         }
 
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999; backdrop-filter: blur(5px); }
-        .modal-content { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card); padding: 25px; border: 2px solid var(--primary); z-index: 1000; border-radius: 20px; width: 90%; max-width: 450px; line-height: 1.5; }
-        .info-list { margin: 15px 0; padding-left: 0; list-style: none; }
-        .info-list li { margin-bottom: 10px; font-size: 0.9em; position: relative; padding-left: 20px; }
-        .info-list li::before { content: "•"; color: var(--primary); position: absolute; left: 0; font-weight: bold; }
+        @media (max-width: 600px) {
+            .header { flex-direction: column; align-items: stretch; }
+            #live-clock { font-size: 1.5em; }
+            .config-bar { justify-content: center; }
+            
+            .job-card { flex-wrap: wrap; padding-bottom: 0; }
+            .sort-controls { padding: 5px; order: 1; border-right: none; border-bottom: 1px solid #222; width: 100%; flex-direction: row; justify-content: center; height: 35px; }
+            .job-info { order: 2; flex: 1 1 60%; padding: 8px; }
+            .job-profit { order: 3; flex: 1 1 30%; border-left: none; padding: 8px; border-bottom: 1px solid #222; }
+            .job-data { order: 4; flex: 1 1 100%; justify-content: space-around; background: rgba(0,0,0,0.2); border-bottom: 1px solid #222; padding: 8px; font-size: 0.75em; }
+            .actions { order: 5; flex: 1 1 100%; justify-content: center; padding: 12px; gap: 8px; }
+            .action-btn { flex: 1; height: 40px; } /* Väčšie tlačidlá pre palec */
+        }
     </style>
 </head>
 <body>
-<div id="total_users_display"></div>
 
-<div class="header">
-    <div>
-        <div id="user_display"></div>
-        <h1 style="margin:0; font-size:1.4em; color:var(--primary);">3Dee <span style="color:var(--text)">PRO calc</span></h1>
-    </div>
-    <div class="header-center">
-        <div id="live-clock">--:--:--</div>
-        <div id="live-date">--.--.---- <button class="btn-info" onclick="openInfo()">i</button></div>
-    </div>
-    <div class="config-bar">
-        <div><label id="cfg_lbl_fil">/KG</label><input type="number" id="cfg_fil" value="19" class="config-input"></div>
-        <div><label id="cfg_lbl_ele">/KWH</label><input type="number" id="cfg_ele" value="0.19" class="config-input"></div>
-        <div><label id="cfg_lbl_watt">WATT</label><input type="number" id="cfg_watt" value="120" class="config-input"></div>
-        
-        <div class="curr-switcher">
-            <button class="curr-btn active" id="cur_eur" onclick="setCurrency('EUR')">EUR</button>
-            <button class="curr-btn" id="cur_czk" onclick="setCurrency('CZK')">CZK</button>
-        </div>
+    <div id="total_users_display"></div>
 
+    <div class="header">
         <div class="lang-switcher">
-            <button class="lang-btn" id="l_en" onclick="setLang('en')">EN</button>
-            <button class="lang-btn" id="l_sk" onclick="setLang('sk')">SK</button>
-            <button class="lang-btn" id="l_cz" onclick="setLang('cz')">CZ</button>
-        </div>
-        <button id="btn_theme" class="btn-toggle" onclick="toggleTheme()">🌙</button>
-    </div>
-</div>
-<div class="main-layout">
-    <div class="panel sticky">
-        <div class="cloud-zone">
-            <button class="btn-cloud btn-register" id="btn_reg" onclick="handleCloud('register')">👤 VYTVORIŤ ÚČET</button>
-            <div class="cloud-row">
-                <button class="btn-cloud btn-backup" id="btn_backup" onclick="handleCloud('backup')">☁️ ZÁLOHOVAŤ</button>
-                <button class="btn-cloud btn-restore" id="btn_restore" onclick="handleCloud('restore')">⬇️ OBNOVIŤ</button>
-            </div>
+            <button class="lang-btn active" onclick="setLang('sk')">SK</button>
+            <button class="lang-btn" onclick="setLang('en')">EN</button>
+            <button class="lang-btn" onclick="setLang('cz')">CZ</button>
+            <button class="btn-info" onclick="openInfo()">i</button>
         </div>
 
-        <h2 id="form_title" style="color:var(--primary); font-size: 1.1em; margin-bottom: 15px;">✚ NOVÁ TLAČ</h2>
-        
-        <label id="lbl_type">Typ záznamu</label>
-        <div class="status-toggle">
-            <div id="st_cp" class="st-btn st-btn-cp" onclick="setStatus('cp')">CP (Ponuka)</div>
-            <div id="st_ok" class="st-btn st-btn-ok active" onclick="setStatus('ok')">OK (Výroba)</div>
+        <div class="header-center">
+            <div id="live-clock">00:00:00</div>
+            <div id="live-date"><span>📅</span> pondelok, 1. január</div>
         </div>
 
-        <label id="lbl_name">Názov Projektu</label>
-        <input type="text" id="in_name" placeholder="...">
-        <div class="row">
-            <div><label id="lbl_w">Váha/ks (g)</label><input type="number" id="in_w" step="any"></div>
-            <div><label id="lbl_count">Počet ks</label><input type="number" id="in_count" value="1"></div>
-        </div>
-        <div class="row">
-            <div><label id="lbl_h">Hodiny</label><input type="number" id="in_h"></div>
-            <div><label id="lbl_m">Minúty</label><input type="number" id="in_m"></div>
-        </div>
-        <label id="lbl_price">Predajná cena / 1 ks</label>
-        <input type="number" id="in_price_per" step="any">
-        
-        <div class="calc-preview">
-            <div class="line"><span id="lbl_mat_tot">MATERIÁL SPOLU:</span> <span id="view_total_w">0 g</span></div>
-            <div class="line">
-                <span id="lbl_cost_tot">NÁKLAD:</span> 
-                <input type="number" id="view_total_cost" class="input-inline" step="any" value="0.00" oninput="updatePreview(false)">
+        <div class="config-bar">
+            <div class="curr-switcher">
+                <button class="curr-btn active" onclick="setCurrency('EUR')">€</button>
+                <button class="curr-btn" onclick="setCurrency('USD')">$</button>
+                <button class="curr-btn" onclick="setCurrency('CZK')">Kč</button>
             </div>
-            <div class="line" style="border-top: 1px solid var(--border); padding-top: 5px; font-size: 1.1em;">
-                <span id="lbl_profit_tot">ČISTÝ ZISK:</span> <span id="view_total_profit">0.00 €</span>
-            </div>
+            <div><label id="cfg_lbl_fil">EUR/KG</label><input type="number" id="cfg_fil" class="config-input" value="20" step="any"></div>
+            <div><label id="cfg_lbl_ele">EUR/KWH</label><input type="number" id="cfg_ele" class="config-input" value="0.20" step="any"></div>
+            <div><label id="cfg_lbl_watt">WATT</label><input type="number" id="cfg_watt" class="config-input" value="100"></div>
+            <button class="btn-toggle" id="btn_theme" onclick="toggleTheme()">🌙</button>
         </div>
-        
-        <button class="btn-add" id="btn_save" onclick="saveItem()">ULOŽIŤ DO HISTÓRIE</button>
-        <button id="btn_cancel" onclick="clearForm()" style="display:none; background:var(--btn-bg); border:1px solid var(--border); color:var(--danger); padding:10px; border-radius:10px; width:100%; margin-top:10px; cursor:pointer; font-weight:bold;">✖ ZRUŠIŤ ÚPRAVU</button>
-        <button class="btn-buy" id="btn_other" onclick="addOtherItem()">✚ NÁKUP / INÉ VÝDAVKY</button>
     </div>
 
-    <div>
-        <div class="summary-grid">
-            <div class="stat-card"><div class="stat-label" id="stat_lbl_ok">Vytlačené (OK)</div><div class="stat-value" id="total_kg_ever">0.00 kg</div></div>
-            <div class="stat-card"><div class="stat-label" id="stat_lbl_time">Čas Tlače</div><div class="stat-value" id="total_time_ever">0h 0m</div></div>
-            <div class="stat-card"><div class="stat-label" id="stat_lbl_ord">Zákazky</div><div class="stat-value" id="stat_count">0</div></div>
-            <div class="stat-card"><div class="stat-label" id="stat_lbl_rev">Obrat</div><div class="stat-value" id="stat_obrat">0.00 €</div></div>
-            <div class="stat-card card-spent"><div class="stat-label" id="stat_lbl_mat">Materiál</div><div class="stat-value" id="total_mat_cost">0.00 €</div></div>
-            <div class="stat-card card-spent"><div class="stat-label" id="stat_lbl_ele">Elektrina</div><div class="stat-value" id="total_ele_cost">0.00 €</div></div>
-            <div class="stat-card card-spent"><div class="stat-label" id="stat_lbl_other">Iné Extra</div><div class="stat-value" id="total_spent_other">0.00 €</div></div>
-            <div class="stat-card card-profit"><div class="stat-label" style="color:var(--success)" id="stat_lbl_profit">Čistý Zisk</div><div class="stat-value" id="stat_profit">0.00 €</div></div>
-        </div>
-
-        <input type="text" id="search_input" class="search-input" placeholder="🔍 Vyhľadať v histórii..." oninput="refreshUI()">
-        <div id="list_container"></div>
-    </div>
-</div>
-
-<div class="modal-overlay" id="info_overlay" onclick="closeInfo()"></div>
-<div class="modal-content" id="info_modal">
-    <h3 id="info_title" style="margin-top:0; color:var(--primary); border-bottom:1px solid var(--border); padding-bottom:10px;">ℹ️ INFO</h3>
-    <div id="info_text_content"></div>
-    <button class="btn-add" id="btn_modal_close" onclick="closeInfo()">Zavrieť</button>
-</div>
-
-<script>
-    const CLOUD_URL = "https://script.google.com/macros/s/AKfycbxYzW9mSnJWvxJfvj3QgHN9iiI2tWNIjYKAFbDkYvasUAj2Vwrcl2NNaVGqEpWtLPX2/exec";
-
-    let items = [];
-    let editingId = null;
-    let currentStatus = 'ok';
-    let isDark = true;
-    let loggedUserNick = "";
-    let totalUsersCount = 0;
-    let currentLang = 'sk';
-    let currentCurr = 'EUR';
-    const exchangeRate = 25.0; 
-
-    const dict = {
-        sk: {
-            title: "✚ NOVÁ TLAČ", edit: "✎ UPRAVIŤ TLAČ", cp: "CP (Ponuka)", ok: "OK (Výroba)",
-            type: "Typ záznamu", name: "Názov Projektu", w: "Váha/ks (g)", count: "Počet ks",
-            h: "Hodiny", m: "Minúty", price: "Predajná cena / 1 ks", per_pc: "na 1ks",
-            m_tot: "MATERIÁL SPOLU:", c_tot: "NÁKLAD:", p_tot: "ČISTÝ ZISK:",
-            save: "ULOŽIŤ DO HISTÓRIE", save_edit: "ULOŽIŤ ZMENY", cancel: "✖ ZRUŠIŤ ÚPRAVU", other: "✚ NÁKUP / INÉ VÝDAVKY",
-            b_back: "☁️ ZÁLOHOVAŤ", b_rest: "⬇️ OBNOVIŤ", b_reg: "👤 VYTVORIŤ ÚČET",
-            s_ok: "Vytlačené (OK)", s_time: "Čas Tlače", s_ord: "Zákazky", s_rev: "Obrat",
-            s_mat: "Materiál", s_ele: "Elektrina", s_oth: "Iné Extra", s_prof: "Čistý Zisk",
-            search: "🔍 Vyhľadať v histórii...", cost: "Náklad", sell: "Predaj", profit: "Zisk", buy: "Nákup / Výdavok",
-            p_nick: "Zadaj NICK (Prezývku):", p_pass: "Zadaj HESLO:", m_users: "Celkový počet užívateľov: ",
-            info_title: "ℹ️ INFO", close: "Zavrieť",
-            info_text: `
-                <p style="margin-bottom:8px;">Hobby nástroj na prepočítavanie 3D tlače a ukladanie zákaziek.</p>
-                <p style="margin-bottom:8px;">Pre dlhodobé ukladanie zákaziek je potrebné si vytvoriť Nick a Heslo.</p>
-                <p style="margin-bottom:8px;">Keď máte vytvorené svoje konto, následne sa prihlasujete len cez vaše heslo tlačidlom <b>OBNOVIŤ</b> (odporúčame zvoliť komplexnejšie heslo).</p>
-                <p style="margin-bottom:8px;">Keď máte nahodené svoje položky, treba stlačiť <b>ZÁLOHOVAŤ</b>, aby sa zapísali do cloudu pod vaším účtom.</p>
-                <p style="margin-bottom:8px;">Refresh stránky vás vráti do anonymného režimu (bez účtu).</p>
-                <p style="margin-bottom:8px;">Návrat do účtu je opäť možný cez tlačidlo <b>OBNOVIŤ</b> a vaše heslo.</p>
-                <p style="margin-top: 15px; text-align: center; color: var(--primary);">Instagram: <b>3dee.tlac</b></p>
-            `
-        },
-        en: {
-            title: "✚ NEW PRINT", edit: "✎ EDIT PRINT", cp: "Quote (CP)", ok: "Done (OK)",
-            type: "Record Type", name: "Project Name", w: "Weight/pc (g)", count: "Quantity",
-            h: "Hours", m: "Minutes", price: "Sell Price / 1 pc", per_pc: "per pc",
-            m_tot: "MATERIAL TOTAL:", c_tot: "COST:", p_tot: "NET PROFIT:",
-            save: "SAVE TO HISTORY", save_edit: "SAVE CHANGES", cancel: "✖ CANCEL EDIT", other: "✚ BUY / EXPENSE",
-            b_back: "☁️ BACKUP", b_rest: "⬇️ RESTORE", b_reg: "👤 CREATE USER",
-            s_ok: "Printed (OK)", s_time: "Print Time", s_ord: "Orders", s_rev: "Revenue",
-            s_mat: "Material", s_ele: "Electricity", s_oth: "Other Extra", s_prof: "Net Profit",
-            search: "🔍 Search history...", cost: "Cost", sell: "Sell", profit: "Profit", buy: "Purchase / Expense",
-            p_nick: "Enter NICK:", p_pass: "Enter PASSWORD:", m_users: "Total users: ",
-            info_title: "ℹ️ INFO", close: "Close",
-            info_text: `
-                <p style="margin-bottom:8px;">Hobby tool for 3D printing calculations and job tracking.</p>
-                <p style="margin-bottom:8px;">For long-term job saving, you need to create a Nickname and Password.</p>
-                <p style="margin-bottom:8px;">Once your account is created, you log in using your password via the <b>RESTORE</b> button (we recommend a complex password).</p>
-                <p style="margin-bottom:8px;">Once you have added your items, press <b>BACKUP</b> to save them to the cloud under your account.</p>
-                <p style="margin-bottom:8px;">Refreshing the page returns you to anonymous mode (without an account).</p>
-                <p style="margin-bottom:8px;">Returning to your account is possible again via the <b>RESTORE</b> button and your password.</p>
-                <p style="margin-top: 15px; text-align: center; color: var(--primary);">Instagram: <b>3dee.tlac</b></p>
-            `
-        },
-        cz: {
-            title: "✚ NOVÝ TISK", edit: "✎ UPRAVIT TISK", cp: "CP (Nabídka)", ok: "OK (Výroba)",
-            type: "Typ záznamu", name: "Název Projektu", w: "Váha/ks (g)", count: "Počet ks",
-            h: "Hodiny", m: "Minuty", price: "Prodejní cena / 1 ks", per_pc: "na 1ks",
-            m_tot: "MATERIÁL SPOLU:", c_tot: "NÁKLAD:", p_tot: "ČISTÝ ZISK:",
-            save: "ULOŽIT DO HISTORIE", save_edit: "ULOŽIT ZMĚNY", cancel: "✖ ZRUŠIT ÚPRAVU", other: "✚ NÁKUP / JINÉ VÝDAJE",
-            b_back: "☁️ ZÁLOHOVAT", b_rest: "⬇️ OBNOVIT", b_reg: "👤 VYTVOŘIT UŽIVATELE",
-            s_ok: "Vytištěno (OK)", s_time: "Čas Tisku", s_ord: "Zakázky", s_rev: "Obrat",
-            s_mat: "Materiál", s_ele: "Elektřina", s_oth: "Jiné Extra", s_prof: "Čistý Zisk",
-            search: "🔍 Vyhledat v historii...", cost: "Náklad", sell: "Prodej", profit: "Zisk", buy: "Nákup / Výdaj",
-            p_nick: "Zadej NICK:", p_pass: "Zadej HESLO:", m_users: "Celkem uživatelů: ",
-            info_title: "ℹ️ INFO", close: "Zavřít",
-            info_text: `
-                <p style="margin-bottom:8px;">Hobby nástroj pro přepočítávání 3D tisku a ukládání zakázek.</p>
-                <p style="margin-bottom:8px;">Pro dlouhodobé ukládání zakázek je nutné vytvořit Nick a Heslo.</p>
-                <p style="margin-bottom:8px;">Když máte vytvořené své konto, následně se přihlašujete jen přes vaše heslo tlačítkem <b>OBNOVIT</b> (doporučujeme složitější heslo).</p>
-                <p style="margin-bottom:8px;">Když máte zadané své položky, je třeba stisknout <b>ZÁLOHOVAT</b>, aby se zapsaly do cloudu pod vaším účtem.</p>
-                <p style="margin-bottom:8px;">Refresh stránky vás vrátí do anonymního režimu (bez účtu).</p>
-                <p style="margin-bottom:8px;">Návrat do účtu je opět možný přes tlačítko <b>OBNOVIT</b> a vaše heslo.</p>
-                <p style="margin-top: 15px; text-align: center; color: var(--primary);">Instagram: <b>3dee.tlac</b></p>
-            `
-        }
-    };
-
-    function getSym() { return currentCurr === 'EUR' ? '€' : 'Kč'; }
-
-    function toggleTheme() {
-        isDark = !isDark;
-        document.body.classList.toggle('light-theme', !isDark);
-        document.getElementById('btn_theme').innerText = isDark ? "🌙" : "☀️";
-    }
-
-    function setCurrency(c, silent = false) {
-        const old = currentCurr;
-        currentCurr = c;
-        document.getElementById('cur_eur').classList.toggle('active', c === 'EUR');
-        document.getElementById('cur_czk').classList.toggle('active', c === 'CZK');
-        if(!silent && old !== c) {
-            let f = document.getElementById('cfg_fil'), e = document.getElementById('cfg_ele');
-            if(c === 'CZK') { f.value = (f.value * exchangeRate).toFixed(0); e.value = (e.value * exchangeRate).toFixed(2); }
-            else { f.value = (f.value / exchangeRate).toFixed(0); e.value = (e.value / exchangeRate).toFixed(2); }
-        }
-        applyTexts(); updatePreview(); refreshUI();
-    }
-    function setLang(l) { currentLang = l; applyTexts(); refreshUI(); }
-
-    function applyTexts() {
-        const t = dict[currentLang]; const sym = getSym();
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('l_' + currentLang).classList.add('active');
-        const ids = {
-            'form_title': editingId ? t.edit : t.title, 'st_cp': t.cp, 'st_ok': t.ok, 'lbl_type': t.type, 'lbl_name': t.name, 'lbl_w': t.w, 'lbl_count': t.count, 'lbl_h': t.h, 'lbl_m': t.m,
-            'lbl_price': `${t.price} (${sym})`, 'lbl_mat_tot': t.m_tot, 'lbl_cost_tot': `${t.c_tot} (${sym})`, 'lbl_profit_tot': t.p_tot, 'btn_save': editingId ? t.save_edit : t.save,
-            'btn_cancel': t.cancel, 'btn_other': t.other, 'btn_backup': t.b_back, 'btn_restore': t.b_rest, 'btn_reg': t.b_reg, 'stat_lbl_ok': t.s_ok, 'stat_lbl_time': t.s_time,
-            'stat_lbl_ord': t.s_ord, 'stat_lbl_rev': t.s_rev, 'stat_lbl_mat': t.s_mat, 'stat_lbl_ele': t.s_ele, 'stat_lbl_other': t.s_oth, 'stat_lbl_profit': t.s_prof,
-            'info_title': t.info_title, 'btn_modal_close': t.close, 'cfg_lbl_fil': `${sym}/KG`, 'cfg_lbl_ele': `${sym}/KWH`, 'cfg_lbl_watt': 'WATT'
-        };
-        for (let id in ids) if(document.getElementById(id)) document.getElementById(id).innerText = ids[id];
-        document.getElementById('info_text_content').innerHTML = t.info_text;
-        document.getElementById('search_input').placeholder = t.search;
-        updateUserDisplay();
-    }
-
-    function updateClock() {
-        const now = new Date();
-        document.getElementById('live-clock').innerText = now.toLocaleTimeString('sk-SK');
-        document.getElementById('live-date').innerHTML = now.toLocaleDateString('sk-SK', {weekday:'long', day:'2-digit', month:'long'}) + ` <button class="btn-info" onclick="openInfo()">i</button>`;
-    }
-    setInterval(updateClock, 1000); updateClock();
-
-    function updatePreview(auto = true) {
-        const w = parseFloat(document.getElementById('in_w').value) || 0;
-        const c = parseInt(document.getElementById('in_count').value) || 1;
-        const h = parseFloat(document.getElementById('in_h').value) || 0;
-        const m = parseFloat(document.getElementById('in_m').value) || 0;
-        const p = parseFloat(document.getElementById('in_price_per').value) || 0;
-        const f = parseFloat(document.getElementById('cfg_fil').value) || 19;
-        const e = parseFloat(document.getElementById('cfg_ele').value) || 0.19;
-        const watt = parseFloat(document.getElementById('cfg_watt').value) || 120;
-
-        const totalW = w * c, totalMins = (h * 60 + m) * c;
-        const matC = (totalW / 1000) * f, eleC = (totalMins / 60) * (watt / 1000) * e;
-
-        if(auto) document.getElementById('view_total_cost').value = (matC + eleC).toFixed(2);
-        const cost = parseFloat(document.getElementById('view_total_cost').value) || 0;
-        const profit = (p * c - cost);
-        
-        document.getElementById('view_total_w').innerText = totalW.toFixed(0) + " g";
-        document.getElementById('view_total_profit').innerText = profit.toFixed(2) + " " + getSym();
-        return { totalW, totalMins, matC, eleC, cost, totalSell: p * c, w, c, h, m, p, profit };
-    }
-
-    function saveItem() {
-        const calc = updatePreview(false);
-        const newItem = {
-            id: editingId || Date.now(), type: 'print', status: currentStatus,
-            name: document.getElementById('in_name').value || "Bez názvu",
-            sell: Number(calc.totalSell), cost: Number(calc.cost), matCost: Number(calc.matC), eleCost: Number(calc.eleC),
-            profit: Number(calc.profit), totalW: Number(calc.totalW), mins: Number(calc.totalMins),
-            weight: Number(calc.w), count: Number(calc.c), h: Number(calc.h), m: Number(calc.m), pricePer: Number(calc.p),
-            date: new Date().toLocaleString(), currency: currentCurr
-        };
-        if(editingId) items = items.map(i => i.id === editingId ? newItem : i);
-        else items.unshift(newItem);
-        clearForm();
-    }
-
-    function editItem(id) {
-        const i = items.find(x => x.id === id); if(!i) return;
-        editingId = id; setStatus(i.status || 'ok');
-        document.getElementById('in_name').value = i.name;
-        document.getElementById('in_w').value = i.weight;
-        document.getElementById('in_count').value = i.count;
-        document.getElementById('in_h').value = i.h;
-        document.getElementById('in_m').value = i.m;
-        document.getElementById('in_price_per').value = i.pricePer;
-        document.getElementById('view_total_cost').value = i.cost;
-        document.getElementById('btn_save').classList.add('is-active-edit');
-        document.getElementById('btn_cancel').style.display = "block";
-        document.getElementById('btn_other').style.display = "none";
-        applyTexts(); window.scrollTo({top: 0, behavior: 'smooth'}); refreshUI();
-    }
-
-    function clearForm() {
-        editingId = null;
-        ['in_name', 'in_w', 'in_h', 'in_m', 'in_price_per'].forEach(id => document.getElementById(id).value = "");
-        document.getElementById('in_count').value = "1";
-        document.getElementById('btn_save').classList.remove('is-active-edit');
-        document.getElementById('btn_cancel').style.display = "none";
-        document.getElementById('btn_other').style.display = "block";
-        applyTexts(); updatePreview(); refreshUI();
-    }
-
-    function deleteItem(id) { if(confirm("Zmazať?")) { items = items.filter(i => i.id !== id); refreshUI(); } }
-    function duplicateItem(id) { const i = items.find(x => x.id === id); items.unshift({...i, id: Date.now(), date: new Date().toLocaleString()}); refreshUI(); }
-    function toggleItemStatus(id) { items = items.map(i => i.id === id ? {...i, status: i.status === 'ok' ? 'cp' : 'ok'} : i); refreshUI(); }
-    
-    function addOtherItem() {
-        const n = prompt("Názov:"); if(!n) return;
-        const valStr = prompt("Suma (+ predaj, - výdavok):"); if(!valStr) return;
-        const v = parseFloat(valStr.replace(',','.')); if(isNaN(v)) return;
-        items.unshift({id:Date.now(), type:'buy', status:'ok', name:n, sell: v>0?v:0, cost: v<0?Math.abs(v):0, profit:v, date: new Date().toLocaleString(), currency: currentCurr});
-        refreshUI();
-    }
-
-    function moveListItem(id, action) {
-        const idx = items.findIndex(i => i.id === id); if (idx < 0) return;
-        const item = items.splice(idx, 1)[0];
-        if (action === 'top') items.unshift(item); else items.push(item);
-        refreshUI();
-    }
-    function handleDragStart(e, id) { e.dataTransfer.setData('text/plain', id); e.target.style.opacity = '0.5'; }
-    function handleDragOver(e) { e.preventDefault(); e.target.closest('.job-card')?.classList.add('drag-over'); }
-    function handleDragLeave(e) { e.target.closest('.job-card')?.classList.remove('drag-over'); }
-    function handleDrop(e, targetId) {
-        e.preventDefault(); e.target.closest('.job-card')?.classList.remove('drag-over');
-        const draggedId = Number(e.dataTransfer.getData('text/plain'));
-        if (draggedId && draggedId !== targetId) {
-            const from = items.findIndex(i => i.id === draggedId);
-            const to = items.findIndex(i => i.id === targetId);
-            if (from >= 0 && to >= 0) {
-                const item = items.splice(from, 1)[0];
-                items.splice(to, 0, item);
-                refreshUI();
-            }
-        }
-    }
-    function handleDragEnd(e) { e.target.style.opacity = '1'; document.querySelectorAll('.job-card').forEach(c => c.classList.remove('drag-over')); }
-
-    function refreshUI() {
-        const container = document.getElementById('list_container');
-        const query = document.getElementById('search_input').value.toLowerCase();
-        container.innerHTML = ""; const t = dict[currentLang]; const sym = getSym();
-        let s_kg=0, s_time=0, s_ord=0, s_rev=0, s_mat=0, s_ele=0, s_prof=0, s_oth=0;
-
-        items.forEach(i => {
-            let dCost = i.cost, dSell = i.sell, dProfit = i.profit;
-            if (i.currency === 'EUR' && currentCurr === 'CZK') { dCost *= exchangeRate; dSell *= exchangeRate; dProfit *= exchangeRate; }
-            else if (i.currency === 'CZK' && currentCurr === 'EUR') { dCost /= exchangeRate; dSell /= exchangeRate; dProfit /= exchangeRate; }
-
-            if(i.status === 'ok') {
-                s_rev += dSell; s_prof += dProfit;
-                if(i.type === 'print') { 
-                    s_kg += (i.totalW || 0); s_time += (i.mins || 0); s_ord++; 
-                    if(i.currency === currentCurr) { s_mat += (i.matCost || 0); s_ele += (i.eleCost || 0); }
-                    else if(currentCurr === 'CZK') { s_mat += (i.matCost * exchangeRate); s_ele += (i.eleCost * exchangeRate); }
-                    else { s_mat += (i.matCost / exchangeRate); s_ele += (i.eleCost / exchangeRate); }
-                } else { s_oth += dCost; }
-            }
-            if(!i.name.toLowerCase().includes(query)) return;
-
-            const isEditing = editingId === i.id;
-            const isCP = i.status === 'cp';
-            const count = i.count || 1;
-            const costPer = dCost / count;
-            const sellPer = dSell / count;
-
-            // Zobrazenie počtu kusov v názve položky
-            const countText = count > 1 ? ` <span style="font-size:0.7em; color:var(--primary);">(${count} ks)</span>` : "";
-
-            const card = document.createElement('div');
-            card.className = `job-card type-${i.type} ${isEditing ? 'is-editing' : ''} ${isCP ? 'is-cp' : ''}`;
-            card.draggable = true;
-            card.ondragstart = (e) => handleDragStart(e, i.id);
-            card.ondragover = handleDragOver;
-            card.ondragleave = handleDragLeave;
-            card.ondrop = (e) => handleDrop(e, i.id);
-            card.ondragend = handleDragEnd;
+    <div class="main-layout">
+        <div class="panel sticky">
+            <div id="user_display"></div>
             
-            card.innerHTML = `
-                <div class="sort-controls">
-                    <div class="sc-btn" onclick="moveListItem(${i.id}, 'top')">▲</div>
-                    <div class="sc-btn sc-drag">=</div>
-                    <div class="sc-btn" onclick="moveListItem(${i.id}, 'bottom')">▼</div>
+            <div class="cloud-zone">
+                <div class="cloud-row">
+                    <button class="btn-cloud btn-backup" id="btn_back" onclick="backupToCloud()">☁️ ZÁLOHOVAŤ</button>
+                    <button class="btn-cloud btn-restore" id="btn_rest" onclick="restoreFromCloud()">⬇️ OBNOVIŤ</button>
                 </div>
-                <div class="job-info"><span class="job-name">${i.name}${countText} <span class="job-tag ${isCP?'tag-cp':'tag-ok'}">${isCP?'CP':'OK'}</span></span>
-                <div style="font-size:0.65em; color:#888; font-weight:bold;">${(i.totalW||0).toFixed(0)}g | ${Math.floor((i.mins||0)/60)}h ${(i.mins||0)%60}m</div></div>
-                <div class="job-data">
-                    <div class="data-item">
-                        <span class="data-label">${t.cost}</span>
-                        <span class="data-val" style="color:var(--danger)">${dCost.toFixed(2)}${sym}</span>
-                        <span class="val-per-pc">(${costPer.toFixed(2)}${sym} / ${t.per_pc})</span>
-                    </div>
-                    <div class="data-item">
-                        <span class="data-label">${t.sell}</span>
-                        <span class="data-val" style="color:var(--primary)">${dSell.toFixed(2)}${sym}</span>
-                        <span class="val-per-pc">(${sellPer.toFixed(2)}${sym} / ${t.per_pc})</span>
-                    </div>
+                <button class="btn-cloud btn-register" id="btn_reg" onclick="registerUser()">👤 VYTVORIŤ UŽÍVATEĽA</button>
+            </div>
+
+            <div class="status-toggle">
+                <div class="st-btn st-btn-cp active" id="st_cp" onclick="setStatus('cp')">CP</div>
+                <div class="st-btn st-btn-ok" id="st_ok" onclick="setStatus('ok')">OK</div>
+            </div>
+
+            <label id="lbl_name">Názov zákazky</label>
+            <input type="text" id="in_name" placeholder="...">
+
+            <div class="row">
+                <div><label id="lbl_w">Gramy (g)</label><input type="number" id="in_w"></div>
+                <div><label id="lbl_count">Kusy</label><input type="number" id="in_count" value="1"></div>
+            </div>
+            <div class="row">
+                <div><label id="lbl_h">Hodiny</label><input type="number" id="in_h"></div>
+                <div><label id="lbl_m">Minúty</label><input type="number" id="in_m"></div>
+            </div>
+
+            <label id="lbl_price">Predajná cena / 1 ks</label>
+            <input type="number" id="in_price_per" step="any">
+
+            <div class="calc-preview">
+                <div class="line"><span id="lbl_mat_tot">MATERIÁL SPOLU:</span> <span id="view_total_w">0 g</span></div>
+                <div class="line">
+                    <span id="lbl_cost_tot">NÁKLAD:</span>
+                    <input type="number" id="view_total_cost" class="input-inline" step="any" value="0.00" oninput="updatePreview(false)">
                 </div>
-                <div class="job-profit"><span class="profit-label">${t.profit}</span><span style="color:${dProfit>=0?'var(--success)':'var(--danger)'}">${dProfit.toFixed(2)}${sym}</span></div>
-                <div class="actions"><button class="action-btn ${isCP?'':'active-status'}" onclick="toggleItemStatus(${i.id})">${isCP?'CP':'OK'}</button>
-                <button class="action-btn" onclick="duplicateItem(${i.id})">❐</button><button class="action-btn ${isEditing?'is-active-edit':''}" onclick="editItem(${i.id})">✎</button><button class="action-btn" onclick="deleteItem(${i.id})">🗑</button></div>`;
-            container.appendChild(card);
-        });
+                <div class="line" style="border-top: 1px solid var(--border); padding-top: 5px; margin-top: 5px;">
+                    <span id="lbl_profit_tot">ČISTÝ ZISK:</span> <span id="view_total_profit">0.00 €</span>
+                </div>
+            </div>
 
-        document.getElementById('total_kg_ever').innerText = (s_kg/1000).toFixed(2) + " kg";
-        document.getElementById('total_time_ever').innerText = Math.floor(s_time/60) + "h " + (s_time%60) + "m";
-        document.getElementById('stat_count').innerText = s_ord;
-        document.getElementById('stat_obrat').innerText = s_rev.toFixed(2) + " " + sym;
-        document.getElementById('total_mat_cost').innerText = s_mat.toFixed(2) + " " + sym;
-        document.getElementById('total_ele_cost').innerText = s_ele.toFixed(2) + " " + sym;
-        document.getElementById('total_spent_other').innerText = s_oth.toFixed(2) + " " + sym;
-        document.getElementById('stat_profit').innerText = s_prof.toFixed(2) + " " + sym;
-    }
+            <button class="btn-add" id="btn_save" onclick="addItem()">ULOŽIŤ DO HISTÓRIE</button>
+            <button class="btn-buy" id="btn_other" onclick="addOtherItem()">✚ NÁKUP / INÉ VÝDAJE</button>
+        </div>
 
-    async function handleCloud(action) {
-        const t = dict[currentLang]; let pass, nick;
-        if(action === 'register') { nick = prompt(t.p_nick); if(!nick) return; pass = prompt(t.p_pass); if(!pass) return; }
-        else { pass = prompt(t.p_pass); if(!pass) return; }
-        const btn = document.getElementById(action === 'register' ? 'btn_reg' : (action === 'backup' ? 'btn_backup' : 'btn_restore'));
-        const origText = btn.innerText; btn.innerText = "⏳...";
-        
-        try {
-            if(action === 'register') {
-                const res = await fetch(CLOUD_URL, { method: 'POST', body: JSON.stringify({action: 'register', nick: nick, pass: pass}) });
-                const d = await res.json(); alert(d.message); if(!d.error) { loggedUserNick = nick; updateUserDisplay(); }
-            } else if(action === 'backup') {
-                const settings = { fil: document.getElementById('cfg_fil').value, ele: document.getElementById('cfg_ele').value, watt: document.getElementById('cfg_watt').value, lang: currentLang, curr: currentCurr };
+        <div class="panel">
+            <div class="summary-grid">
+                <div class="stat-card"><div class="stat-label" id="stat_lbl_ord">Zakázky</div><div class="stat-value" id="stat_count">0</div></div>
+                <div class="stat-card"><div class="stat-label" id="stat_lbl_rev">Obrat</div><div class="stat-value" id="stat_obrat">0 €</div></div>
+                <div class="stat-card"><div class="stat-label" id="stat_lbl_profit">Čistý Zisk</div><div class="stat-value card-profit" id="stat_profit">0 €</div></div>
+                <div class="stat-card"><div class="stat-label" id="stat_lbl_time">Čas Tisku</div><div class="stat-value" id="total_time_ever">0h 0m</div></div>
+                <div class="stat-card"><div class="stat-label">Spotreba</div><div class="stat-value" id="total_kg_ever">0 kg</div></div>
+                <div class="stat-card"><div class="stat-label" id="stat_lbl_mat">Materiál</div><div class="stat-value card-spent" id="total_mat_cost">0 €</div></div>
+                <div class="stat-card"><div class="stat-label" id="stat_lbl_ele">Elektrina</div><div class="stat-value card-spent" id="total_ele_cost">0 €</div></div>
+                <div class="stat-card"><div class="stat-label" id="stat_lbl_other">Jiné Extra</div><div class="stat-value card-spent" id="total_spent_other">0 €</div></div>
+            </div>
+
+            <input type="text" id="search_input" class="search-input" placeholder="🔍 Vyhľadať v histórii..." oninput="refreshUI()">
+            
+            <div id="history_list"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="info_overlay" onclick="closeInfo()"></div>
+    <div class="modal-content" id="info_modal">
+        <div class="modal-header">
+            <h2 id="info_title" style="margin:0;">ℹ️ INFO</h2>
+            <button class="btn-toggle" onclick="closeInfo()">✕</button>
+        </div>
+        <div id="info_text_content" style="font-size: 0.9em; line-height: 1.4;"></div>
+        <button class="btn-add" id="btn_modal_close" onclick="closeInfo()" style="margin-top:20px;">Zavrieť</button>
+    </div>
+
+    <script>
+        const CLOUD_URL = "https://script.google.com/macros/s/AKfycbz_63V51V803r_H100GZ100Y-100Y-100Y-100Y-100Y-100Y/exec"; // Ponechajte vašu URL
+        let items = JSON.parse(localStorage.getItem('3dee_items')) || [];
+        let currentLang = 'sk';
+        let currentCurr = 'EUR';
+        let currentStatus = 'cp';
+        let editingId = null;
+        let loggedUserNick = localStorage.getItem('3dee_nick') || "";
+        let totalUsersCount = 0;
+
+        const dict = {
+            sk: {
+                name: "Názov zákazky", w: "Gramy (g)", count: "Kusy", h: "Hodiny", m: "Minúty", price: "Predajná cena / 1 ks", per_pc: "na 1ks",
+                m_tot: "MATERIÁL SPOLU:", c_tot: "NÁKLAD:", p_tot: "ČISTÝ ZISK:", save: "ULOŽIŤ DO HISTÓRIE", save_edit: "ULOŽIŤ ZMENY", cancel: "✖ ZRUŠIŤ ÚPRAVU",
+                other: "✚ NÁKUP / INÉ VÝDAJE", b_back: "☁️ ZÁLOHOVAŤ", b_rest: "⬇️ OBNOVIŤ", b_reg: "👤 VYTVORIŤ UŽÍVATEĽA",
+                s_ok: "Vytlačené (OK)", s_time: "Čas Tlače", s_ord: "Zákazky", s_rev: "Obrat", s_mat: "Materiál", s_ele: "Elektrina", s_oth: "Iné Extra", s_prof: "Čistý Zisk",
+                search: "🔍 Vyhľadať v histórii...", cost: "Náklad", sell: "Predaj",
+                p_nick: "Zadaj NICK (Prezývku):", p_pass: "Zadaj HESLO:", m_users: "Celkový počet užívateľov: ",
+                info_title: "ℹ️ INFO", close: "Zavrieť",
+                info_text: `
+                    <p style="margin-bottom:8px;">Hobby nástroj na prepočítavanie 3D tlače a ukladanie zákaziek.</p>
+                    <p style="margin-bottom:8px;">Pre dlhodobé ukladanie zákaziek je potrebné si vytvoriť Nick a Heslo.</p>
+                    <p style="margin-bottom:8px;">Keď máte vytvorené svoje konto, následne sa prihlasujete len cez vaše heslo tlačidlom <b>OBNOVIŤ</b>.</p>
+                    <p style="margin-bottom:8px;">Keď máte nahodené svoje položky, treba stlačiť <b>ZÁLOHOVAŤ</b>, aby sa zapísali do cloudu.</p>
+                `
+            },
+            en: {
+                name: "Job Name", w: "Grams (g)", count: "Pieces", h: "Hours", m: "Minutes", price: "Sell Price / 1 pc", per_pc: "per pc",
+                m_tot: "TOTAL MATERIAL:", c_tot: "COST:", p_tot: "NET PROFIT:", save: "SAVE TO HISTORY", save_edit: "SAVE CHANGES", cancel: "✖ CANCEL EDIT",
+                other: "✚ PURCHASE / OTHER", b_back: "☁️ BACKUP", b_rest: "⬇️ RESTORE", b_reg: "👤 REGISTER USER",
+                s_ok: "Printed (OK)", s_time: "Print Time", s_ord: "Orders", s_rev: "Revenue", s_mat: "Material", s_ele: "Electricity", s_oth: "Other Extra", s_prof: "Net Profit",
+                search: "🔍 Search history...", cost: "Cost", sell: "Sell",
+                p_nick: "Enter NICK:", p_pass: "Enter PASSWORD:", m_users: "Total users: ",
+                info_title: "ℹ️ INFO", close: "Close",
+                info_text: `<p>Tool for 3D printing cost calculation and job history.</p>`
+            },
+            cz: {
+                name: "Název zakázky", w: "Gramy (g)", count: "Kusy", h: "Hodiny", m: "Minuty", price: "Prodejní cena / 1 ks", per_pc: "na 1ks",
+                m_tot: "MATERIÁL SPOLU:", c_tot: "NÁKLAD:", p_tot: "ČISTÝ ZISK:", save: "ULOŽIT DO HISTORIE", save_edit: "ULOŽIT ZMĚNY", cancel: "✖ ZRUŠIT ÚPRAVU",
+                other: "✚ NÁKUP / JINÉ VÝDAJE", b_back: "☁️ ZÁLOHOVAT", b_rest: "⬇️ OBNOVIT", b_reg: "👤 VYTVOŘIT UŽIVATELE",
+                s_ok: "Vytištěno (OK)", s_time: "Čas Tisku", s_ord: "Zakázky", s_rev: "Obrat", s_mat: "Materiál", s_ele: "Elektřina", s_oth: "Jiné Extra", s_prof: "Čistý Zisk",
+                search: "🔍 Vyhledat v historii...", cost: "Náklad", sell: "Prodej",
+                p_nick: "Zadej NICK:", p_pass: "Zadej HESLO:", m_users: "Celkový počet uživatelů: ",
+                info_title: "ℹ️ INFO", close: "Zavřít",
+                info_text: `<p>Hobby nástroj pro výpočet 3D tisku a historii zakázek.</p>`
+            }
+        };
+
+        function setLang(l) {
+            currentLang = l;
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.innerText.toLowerCase() === l));
+            applyTexts();
+        }
+
+        function setCurrency(c, skipUI = false) {
+            currentCurr = c;
+            document.querySelectorAll('.curr-btn').forEach(b => {
+                const sym = c==='EUR'?'€':(c==='USD'?'$':'Kč');
+                b.classList.toggle('active', b.innerText === sym);
+            });
+            if(!skipUI) { updatePreview(); refreshUI(); applyTexts(); }
+        }
+
+        function applyTexts() {
+            const t = dict[currentLang];
+            const sym = currentCurr==='EUR'?'€':(currentCurr==='USD'?'$':'Kč');
+            const ids = {
+                'lbl_name': t.name, 'lbl_w': t.w, 'lbl_count': t.count, 'lbl_h': t.h, 'lbl_m': t.m, 'lbl_price': t.price,
+                'lbl_mat_tot': t.m_tot, 'lbl_cost_tot': t.c_tot, 'lbl_profit_tot': t.p_tot,
+                'btn_save': editingId ? t.save_edit : t.save,
+                'btn_other': t.other, 'btn_back': t.b_back, 'btn_rest': t.b_rest, 'btn_reg': t.b_reg,
+                'stat_lbl_ok': t.s_ok, 'stat_lbl_time': t.s_time, 'stat_lbl_ord': t.s_ord, 'stat_lbl_rev': t.s_rev,
+                'stat_lbl_mat': t.s_mat, 'stat_lbl_ele': t.s_ele, 'stat_lbl_other': t.s_oth, 'stat_lbl_profit': t.s_prof,
+                'info_title': t.info_title, 'btn_modal_close': t.close,
+                'cfg_lbl_fil': `${sym}/KG`, 'cfg_lbl_ele': `${sym}/KWH`, 'cfg_lbl_watt': 'WATT'
+            };
+            for (let id in ids) if(document.getElementById(id)) document.getElementById(id).innerText = ids[id];
+            document.getElementById('info_text_content').innerHTML = t.info_text;
+            document.getElementById('search_input').placeholder = t.search;
+            updateUserDisplay();
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            document.getElementById('btn_theme').innerText = document.body.classList.contains('light-theme') ? '☀️' : '🌙';
+        }
+
+        function updatePreview(updateCostInput = true) {
+            const w = parseFloat(document.getElementById('in_w').value) || 0;
+            const count = parseFloat(document.getElementById('in_count').value) || 1;
+            const h = parseFloat(document.getElementById('in_h').value) || 0;
+            const m = parseFloat(document.getElementById('in_m').value) || 0;
+            const pricePer = parseFloat(document.getElementById('in_price_per').value) || 0;
+            
+            const cfgFil = parseFloat(document.getElementById('cfg_fil').value) || 0;
+            const cfgEle = parseFloat(document.getElementById('cfg_ele').value) || 0;
+            const cfgWatt = parseFloat(document.getElementById('cfg_watt').value) || 0;
+
+            const totalW = w * count;
+            const totalMin = (h * 60) + m;
+            const matCost = (totalW / 1000) * cfgFil;
+            const eleCost = (totalMin / 60) * (cfgWatt / 1000) * cfgEle;
+            const totalCost = matCost + eleCost;
+            const totalSell = pricePer * count;
+
+            document.getElementById('view_total_w').innerText = totalW + " g";
+            if(updateCostInput) document.getElementById('view_total_cost').value = totalCost.toFixed(2);
+            
+            const manualCost = parseFloat(document.getElementById('view_total_cost').value) || 0;
+            const profit = totalSell - manualCost;
+            
+            const sym = currentCurr==='EUR'?'€':(currentCurr==='USD'?'$':'Kč');
+            document.getElementById('view_total_profit').innerText = profit.toFixed(2) + " " + sym;
+            document.getElementById('view_total_profit').style.color = profit >= 0 ? 'var(--success)' : 'var(--danger)';
+        }
+
+        function addItem() {
+            const name = document.getElementById('in_name').value || "...";
+            const w = parseFloat(document.getElementById('in_w').value) || 0;
+            const count = parseFloat(document.getElementById('in_count').value) || 1;
+            const h = parseFloat(document.getElementById('in_h').value) || 0;
+            const m = parseFloat(document.getElementById('in_m').value) || 0;
+            const sell = (parseFloat(document.getElementById('in_price_per').value) || 0) * count;
+            const cost = parseFloat(document.getElementById('view_total_cost').value) || 0;
+
+            const cfgFil = parseFloat(document.getElementById('cfg_fil').value) || 0;
+            const cfgEle = parseFloat(document.getElementById('cfg_ele').value) || 0;
+            const cfgWatt = parseFloat(document.getElementById('cfg_watt').value) || 0;
+
+            const matCost = ((w * count) / 1000) * cfgFil;
+            const eleCost = (((h * 60) + m) / 60) * (cfgWatt / 1000) * cfgEle;
+
+            if(editingId) {
+                items = items.map(i => i.id === editingId ? { ...i, name, w, count, h, m, sell, cost, status: currentStatus, matCost, eleCost, curr: currentCurr } : i);
+                editingId = null;
+            } else {
+                items.unshift({ id: Date.now(), type: 'print', name, w, count, h, m, sell, cost, status: currentStatus, matCost, eleCost, curr: currentCurr, date: new Date().toLocaleString() });
+            }
+            resetForm();
+            refreshUI();
+        }
+
+        function resetForm() {
+            document.getElementById('in_name').value = "";
+            document.getElementById('in_w').value = "";
+            document.getElementById('in_h').value = "";
+            document.getElementById('in_m').value = "";
+            document.getElementById('in_price_per').value = "";
+            document.getElementById('in_count').value = "1";
+            editingId = null;
+            applyTexts();
+            updatePreview();
+        }
+
+        function editItem(id) {
+            const i = items.find(x => x.id === id);
+            if(!i) return;
+            editingId = i.id;
+            document.getElementById('in_name').value = i.name;
+            document.getElementById('in_w').value = i.w || 0;
+            document.getElementById('in_count').value = i.count || 1;
+            document.getElementById('in_h').value = i.h || 0;
+            document.getElementById('in_m').value = i.m || 0;
+            document.getElementById('in_price_per').value = (i.sell / (i.count || 1)).toFixed(2);
+            setStatus(i.status);
+            applyTexts();
+            updatePreview();
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function deleteItem(id) {
+            if(confirm("Zmazať?")) { items = items.filter(i => i.id !== id); refreshUI(); }
+        }
+
+        function duplicateItem(id) {
+            const i = items.find(x => x.id === id);
+            items.unshift({...i, id: Date.now(), date: new Date().toLocaleString()});
+            refreshUI();
+        }
+
+        function toggleItemStatus(id) {
+            items = items.map(i => i.id === id ? {...i, status: i.status === 'ok' ? 'cp' : 'ok'} : i);
+            refreshUI();
+        }
+
+        function addOtherItem() {
+            const n = prompt("Názov:"); if(!n) return;
+            const valStr = prompt("Suma (+ predaj, - výdavok):"); if(!valStr) return;
+            const v = parseFloat(valStr.replace(',','.')); if(isNaN(v)) return;
+            items.unshift({id:Date.now(), type:'buy', status:'ok', name:n, sell: v>0?v:0, cost: v<0?Math.abs(v):0, date: new Date().toLocaleString(), curr: currentCurr});
+            refreshUI();
+        }
+
+        function moveItem(id, direction) {
+            const idx = items.findIndex(i => i.id === id);
+            if(direction === 'up' && idx > 0) { [items[idx], items[idx-1]] = [items[idx-1], items[idx]]; }
+            if(direction === 'down' && idx < items.length - 1) { [items[idx], items[idx+1]] = [items[idx+1], items[idx]]; }
+            refreshUI();
+        }
+
+        async function backupToCloud() {
+            const pass = prompt(dict[currentLang].p_pass); if(!pass) return;
+            const btn = document.getElementById('btn_back'); const origText = btn.innerText; btn.innerText = "...";
+            try {
+                const settings = { lang: currentLang, curr: currentCurr };
                 const res = await fetch(CLOUD_URL, { method: 'POST', body: JSON.stringify({action: 'backup', pass: pass, data: items, settings: settings}) });
-                const d = await res.json(); alert(d.message);
-            } else if(action === 'restore') {
-                const res = await fetch(`${CLOUD_URL}?action=restore&pass=${encodeURIComponent(pass)}`);
+                const d = await res.json(); alert(d.msg);
+            } catch(e) { alert("Chyba spojenia."); }
+            btn.innerText = origText;
+        }
+
+        async function restoreFromCloud() {
+            const pass = prompt(dict[currentLang].p_pass); if(!pass) return;
+            const btn = document.getElementById('btn_rest'); const origText = btn.innerText; btn.innerText = "...";
+            try {
+                const res = await fetch(CLOUD_URL, { method: 'POST', body: JSON.stringify({action: 'restore', pass: pass}) });
                 const d = await res.json();
-                if (d.error) alert(d.message); else {
-                    items = d.data || []; loggedUserNick = d.nick; totalUsersCount = d.userCount;
+                if(d.error) alert(d.error);
+                else {
+                    items = d.data || [];
                     if(d.settings) {
-                        document.getElementById('cfg_fil').value = d.settings.fil || 19; 
-                        document.getElementById('cfg_ele').value = d.settings.ele || 0.19;
-                        document.getElementById('cfg_watt').value = d.settings.watt || 120;
-                        currentLang = d.settings.lang || 'sk'; 
-                        currentCurr = d.settings.curr || 'EUR';
+                        currentLang = d.settings.lang || 'sk'; currentCurr = d.settings.curr || 'EUR';
                         setCurrency(currentCurr, true); setLang(currentLang);
                     }
-                    refreshUI(); updateUserDisplay(); alert("Záloha a nastavenia boli úspešne obnovené.");
+                    refreshUI(); updateUserDisplay(); alert("Záloha úspešná.");
                 }
-            }
-        } catch(e) { alert("Chyba spojenia s Cloudom."); }
-        btn.innerText = origText;
-    }
+            } catch(e) { alert("Chyba cloudu."); }
+            btn.innerText = origText;
+        }
 
-    function openInfo() { document.getElementById('info_overlay').style.display = 'block'; document.getElementById('info_modal').style.display = 'block'; }
-    function closeInfo() { document.getElementById('info_overlay').style.display = 'none'; document.getElementById('info_modal').style.display = 'none'; }
-    function setStatus(s) { currentStatus = s; document.getElementById('st_cp').classList.toggle('active', s === 'cp'); document.getElementById('st_ok').classList.toggle('active', s === 'ok'); }
-    function updateUserDisplay() { document.getElementById('user_display').innerText = loggedUserNick ? `👤 ${loggedUserNick}` : ""; document.getElementById('total_users_display').innerText = `${dict[currentLang].m_users} ${totalUsersCount}`; }
+        async function registerUser() {
+            const nick = prompt(dict[currentLang].p_nick); if(!nick) return;
+            const pass = prompt(dict[currentLang].p_pass); if(!pass) return;
+            try {
+                const res = await fetch(CLOUD_URL, { method: 'POST', body: JSON.stringify({action: 'register', nick: nick, pass: pass}) });
+                const d = await res.json(); alert(d.msg);
+                if(!d.error) { loggedUserNick = nick; localStorage.setItem('3dee_nick', nick); updateUserDisplay(); }
+            } catch(e) { alert("Chyba."); }
+        }
 
-    ['in_w','in_count','in_h','in_m','in_price_per','cfg_fil','cfg_ele','cfg_watt'].forEach(id => {
-        document.getElementById(id).addEventListener('input', () => updatePreview());
-    });
+        async function fetchUserCount() {
+            try { const res = await fetch(CLOUD_URL + "?action=getCount"); const d = await res.json(); totalUsersCount = d.count; updateUserDisplay(); } catch(e) {}
+        }
 
-    window.onload = () => { applyTexts(); updatePreview(); refreshUI(); };
-</script>
+        function refreshUI() {
+            localStorage.setItem('3dee_items', JSON.stringify(items));
+            const container = document.getElementById('history_list');
+            const query = document.getElementById('search_input').value.toLowerCase();
+            container.innerHTML = "";
+            const sym = currentCurr==='EUR'?'€':(currentCurr==='USD'?'$':'Kč');
+
+            let s_ord=0, s_rev=0, s_prof=0, s_time=0, s_kg=0, s_mat=0, s_ele=0, s_oth=0;
+            const exchangeRate = 1; // Pre zjednodušenie
+
+            items.forEach(i => {
+                const dCost = i.cost || 0; const dSell = i.sell || 0;
+                if(i.status === 'ok') {
+                    s_ord++; s_rev += dSell; s_prof += (dSell - dCost);
+                    if(i.type === 'print') {
+                        s_time += ((i.h||0)*60 + (i.m||0)); s_kg += ((i.w||0)*(i.count||1));
+                        s_mat += (i.matCost || 0); s_ele += (i.eleCost || 0);
+                    } else { s_oth += dCost; }
+                }
+                if(!i.name.toLowerCase().includes(query)) return;
+                
+                const isEditing = editingId === i.id;
+                const isCP = i.status === 'cp';
+                const count = i.count || 1;
+                const card = document.createElement('div');
+                card.className = `job-card type-${i.type} ${isEditing ? 'is-editing' : ''} ${isCP ? 'is-cp' : 'is-ok'}`;
+                
+                card.innerHTML = `
+                    <div class="sort-controls">
+                        <div class="sort-btn" onclick="moveItem(${i.id}, 'up')">▲</div>
+                        <div class="sort-btn" onclick="moveItem(${i.id}, 'down')">▼</div>
+                    </div>
+                    <div class="job-info">
+                        <div class="job-name">${i.name} ${count > 1 ? `<small style="color:var(--primary)">(${count}ks)</small>` : ''}</div>
+                        <div class="job-date">${i.date || ''}</div>
+                    </div>
+                    <div class="job-profit">
+                        <div class="profit-val">${dSell.toFixed(2)} ${sym}</div>
+                        <div class="cost-val">-${dCost.toFixed(2)} ${sym}</div>
+                    </div>
+                    <div class="job-data">
+                        ${i.type==='print' ? `<span>⏱ <strong>${i.h}h ${i.m}m</strong></span><span>⚖️ <strong>${(i.w*count)}g</strong></span>` : '<span>📦 NÁKUP</span>'}
+                    </div>
+                    <div class="actions">
+                        <button class="action-btn ${isCP?'is-cp-status':'is-ok-status'}" onclick="toggleItemStatus(${i.id})">${isCP?'CP':'OK'}</button>
+                        <button class="action-btn" onclick="duplicateItem(${i.id})">❐</button>
+                        <button class="action-btn ${isEditing?'is-active-edit':''}" onclick="editItem(${i.id})">✎</button>
+                        <button class="action-btn" onclick="deleteItem(${i.id})">🗑</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            document.getElementById('total_kg_ever').innerText = (s_kg/1000).toFixed(2) + " kg";
+            document.getElementById('total_time_ever').innerText = Math.floor(s_time/60) + "h " + (s_time%60) + "m";
+            document.getElementById('stat_count').innerText = s_ord;
+            document.getElementById('stat_obrat').innerText = s_rev.toFixed(2) + " " + sym;
+            document.getElementById('total_mat_cost').innerText = s_mat.toFixed(2) + " " + sym;
+            document.getElementById('total_ele_cost').innerText = s_ele.toFixed(2) + " " + sym;
+            document.getElementById('total_spent_other').innerText = s_oth.toFixed(2) + " " + sym;
+            document.getElementById('stat_profit').innerText = s_prof.toFixed(2) + " " + sym;
+        }
+
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('live-clock').innerText = now.toLocaleTimeString('sk-SK');
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('live-date').innerHTML = `<span>📅</span> ` + now.toLocaleDateString(currentLang==='en'?'en-US':(currentLang==='cz'?'cs-CZ':'sk-SK'), options);
+        }
+
+        function openInfo() { document.getElementById('info_overlay').style.display = 'block'; document.getElementById('info_modal').style.display = 'block'; }
+        function closeInfo() { document.getElementById('info_overlay').style.display = 'none'; document.getElementById('info_modal').style.display = 'none'; }
+        function setStatus(s) { currentStatus = s; document.getElementById('st_cp').classList.toggle('active', s === 'cp'); document.getElementById('st_ok').classList.toggle('active', s === 'ok'); }
+        function updateUserDisplay() { 
+            document.getElementById('user_display').innerText = loggedUserNick ? `👤 ${loggedUserNick}` : ""; 
+            document.getElementById('total_users_display').innerText = `${dict[currentLang].m_users} ${totalUsersCount}`; 
+        }
+
+        ['in_w','in_count','in_h','in_m','in_price_per','cfg_fil','cfg_ele','cfg_watt'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => updatePreview());
+        });
+
+        setInterval(updateClock, 1000);
+        updateClock();
+        applyTexts();
+        updatePreview();
+        refreshUI();
+        fetchUserCount();
+    </script>
 </body>
 </html>
