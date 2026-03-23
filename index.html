@@ -163,7 +163,6 @@
         <button id="btn_theme" class="btn-toggle" onclick="toggleTheme()">🌙</button>
     </div>
 </div>
-
 <div class="main-layout">
     <div class="panel sticky">
         <div class="cloud-zone">
@@ -232,9 +231,9 @@
 <div class="modal-content" id="info_modal">
     <h3 id="info_title" style="margin-top:0; color:var(--primary); border-bottom:1px solid var(--border); padding-bottom:10px;">ℹ️ INFO</h3>
     <div id="info_text_content"></div>
-    <p style="font-size: 0.8em; text-align: center; color: var(--primary); margin-top: 20px;">Instagram: <b>3dee.tlac</b></p>
     <button class="btn-add" id="btn_modal_close" onclick="closeInfo()">Zavrieť</button>
 </div>
+
 <script>
     const CLOUD_URL = "https://script.google.com/macros/s/AKfycbxYzW9mSnJWvxJfvj3QgHN9iiI2tWNIjYKAFbDkYvasUAj2Vwrcl2NNaVGqEpWtLPX2/exec";
 
@@ -261,7 +260,15 @@
             search: "🔍 Vyhľadať v histórii...", cost: "Náklad", sell: "Predaj", profit: "Zisk", buy: "Nákup / Výdavok",
             p_nick: "Zadaj NICK (Prezývku):", p_pass: "Zadaj HESLO:", m_users: "Celkový počet užívateľov: ",
             info_title: "ℹ️ INFO", close: "Zavrieť",
-            info_text: `<ul class="info-list"><li>Hobby nástroj na prepočítavanie 3D tlače.</li><li>Záloha ukladá dáta aj tvoje nastavenia cien a spotreby.</li><li>Obnova prebehne zadaním hesla cez tlačidlo OBNOVIŤ.</li></ul>`
+            info_text: `
+                <p style="margin-bottom:8px;">Hobby nástroj na prepočítavanie 3D tlače a ukladanie zákaziek.</p>
+                <p style="margin-bottom:8px;">Pre dlhodobé ukladanie zákaziek je potrebné si vytvoriť Nick a Heslo.</p>
+                <p style="margin-bottom:8px;">Keď máte vytvorené svoje konto, následne sa prihlasujete len cez vaše heslo tlačidlom <b>OBNOVIŤ</b> (odporúčame zvoliť komplexnejšie heslo).</p>
+                <p style="margin-bottom:8px;">Keď máte nahodené svoje položky, treba stlačiť <b>ZÁLOHOVAŤ</b>, aby sa zapísali do cloudu pod vaším účtom.</p>
+                <p style="margin-bottom:8px;">Refresh stránky vás vráti do anonymného režimu (bez účtu).</p>
+                <p style="margin-bottom:8px;">Návrat do účtu je opäť možný cez tlačidlo <b>OBNOVIŤ</b> a vaše heslo.</p>
+                <p style="margin-top: 15px; text-align: center; color: var(--primary);">Instagram: <b>3dee.tlac</b></p>
+            `
         },
         en: {
             title: "✚ NEW PRINT", edit: "✎ EDIT PRINT", cp: "Quote (CP)", ok: "Done (OK)",
@@ -275,7 +282,15 @@
             search: "🔍 Search history...", cost: "Cost", sell: "Sell", profit: "Profit", buy: "Purchase / Expense",
             p_nick: "Enter NICK:", p_pass: "Enter PASSWORD:", m_users: "Total users: ",
             info_title: "ℹ️ INFO", close: "Close",
-            info_text: `<ul class="info-list"><li>Hobby tool for 3D printing calculations.</li><li>Backup saves data and settings.</li></ul>`
+            info_text: `
+                <p style="margin-bottom:8px;">Hobby tool for 3D printing calculations and job tracking.</p>
+                <p style="margin-bottom:8px;">For long-term job saving, you need to create a Nickname and Password.</p>
+                <p style="margin-bottom:8px;">Once your account is created, you log in using your password via the <b>RESTORE</b> button (we recommend a complex password).</p>
+                <p style="margin-bottom:8px;">Once you have added your items, press <b>BACKUP</b> to save them to the cloud under your account.</p>
+                <p style="margin-bottom:8px;">Refreshing the page returns you to anonymous mode (without an account).</p>
+                <p style="margin-bottom:8px;">Returning to your account is possible again via the <b>RESTORE</b> button and your password.</p>
+                <p style="margin-top: 15px; text-align: center; color: var(--primary);">Instagram: <b>3dee.tlac</b></p>
+            `
         },
         cz: {
             title: "✚ NOVÝ TISK", edit: "✎ UPRAVIT TISK", cp: "CP (Nabídka)", ok: "OK (Výroba)",
@@ -289,7 +304,15 @@
             search: "🔍 Vyhledat v historii...", cost: "Náklad", sell: "Prodej", profit: "Zisk", buy: "Nákup / Výdaj",
             p_nick: "Zadej NICK:", p_pass: "Zadej HESLO:", m_users: "Celkem uživatelů: ",
             info_title: "ℹ️ INFO", close: "Zavřít",
-            info_text: `<ul class="info-list"><li>Hobby nástroj pro přepočet 3D tisku.</li><li>Záloha ukládá data i nastavení.</li></ul>`
+            info_text: `
+                <p style="margin-bottom:8px;">Hobby nástroj pro přepočítávání 3D tisku a ukládání zakázek.</p>
+                <p style="margin-bottom:8px;">Pro dlouhodobé ukládání zakázek je nutné vytvořit Nick a Heslo.</p>
+                <p style="margin-bottom:8px;">Když máte vytvořené své konto, následně se přihlašujete jen přes vaše heslo tlačítkem <b>OBNOVIT</b> (doporučujeme složitější heslo).</p>
+                <p style="margin-bottom:8px;">Když máte zadané své položky, je třeba stisknout <b>ZÁLOHOVAT</b>, aby se zapsaly do cloudu pod vaším účtem.</p>
+                <p style="margin-bottom:8px;">Refresh stránky vás vrátí do anonymního režimu (bez účtu).</p>
+                <p style="margin-bottom:8px;">Návrat do účtu je opět možný přes tlačítko <b>OBNOVIT</b> a vaše heslo.</p>
+                <p style="margin-top: 15px; text-align: center; color: var(--primary);">Instagram: <b>3dee.tlac</b></p>
+            `
         }
     };
 
@@ -313,7 +336,6 @@
         }
         applyTexts(); updatePreview(); refreshUI();
     }
-
     function setLang(l) { currentLang = l; applyTexts(); refreshUI(); }
 
     function applyTexts() {
@@ -348,7 +370,7 @@
         const p = parseFloat(document.getElementById('in_price_per').value) || 0;
         const f = parseFloat(document.getElementById('cfg_fil').value) || 19;
         const e = parseFloat(document.getElementById('cfg_ele').value) || 0.19;
-        const watt = parseFloat(document.getElementById('cfg_watt').value) || 120; // Prepojené na nové WATT pole
+        const watt = parseFloat(document.getElementById('cfg_watt').value) || 120;
 
         const totalW = w * c, totalMins = (h * 60 + m) * c;
         const matC = (totalW / 1000) * f, eleC = (totalMins / 60) * (watt / 1000) * e;
@@ -414,7 +436,7 @@
         items.unshift({id:Date.now(), type:'buy', status:'ok', name:n, sell: v>0?v:0, cost: v<0?Math.abs(v):0, profit:v, date: new Date().toLocaleString(), currency: currentCurr});
         refreshUI();
     }
-    // --- DRAG & DROP LOGIKA ---
+
     function moveListItem(id, action) {
         const idx = items.findIndex(i => i.id === id); if (idx < 0) return;
         const item = items.splice(idx, 1)[0];
@@ -464,8 +486,11 @@
             const isEditing = editingId === i.id;
             const isCP = i.status === 'cp';
             const count = i.count || 1;
-            const costPer = dCost / count; // Pridaný výpočet na 1 kus pre NÁKLAD
-            const sellPer = dSell / count; // Pridaný výpočet na 1 kus pre PREDAJ
+            const costPer = dCost / count;
+            const sellPer = dSell / count;
+
+            // Zobrazenie počtu kusov v názve položky
+            const countText = count > 1 ? ` <span style="font-size:0.7em; color:var(--primary);">(${count} ks)</span>` : "";
 
             const card = document.createElement('div');
             card.className = `job-card type-${i.type} ${isEditing ? 'is-editing' : ''} ${isCP ? 'is-cp' : ''}`;
@@ -476,14 +501,13 @@
             card.ondrop = (e) => handleDrop(e, i.id);
             card.ondragend = handleDragEnd;
             
-            // HTML Záznamu (Karty) bolo aktualizované o prepočet (X.XX / na 1ks)
             card.innerHTML = `
                 <div class="sort-controls">
                     <div class="sc-btn" onclick="moveListItem(${i.id}, 'top')">▲</div>
                     <div class="sc-btn sc-drag">=</div>
                     <div class="sc-btn" onclick="moveListItem(${i.id}, 'bottom')">▼</div>
                 </div>
-                <div class="job-info"><span class="job-name">${i.name} <span class="job-tag ${isCP?'tag-cp':'tag-ok'}">${isCP?'CP':'OK'}</span></span>
+                <div class="job-info"><span class="job-name">${i.name}${countText} <span class="job-tag ${isCP?'tag-cp':'tag-ok'}">${isCP?'CP':'OK'}</span></span>
                 <div style="font-size:0.65em; color:#888; font-weight:bold;">${(i.totalW||0).toFixed(0)}g | ${Math.floor((i.mins||0)/60)}h ${(i.mins||0)%60}m</div></div>
                 <div class="job-data">
                     <div class="data-item">
@@ -525,7 +549,6 @@
                 const res = await fetch(CLOUD_URL, { method: 'POST', body: JSON.stringify({action: 'register', nick: nick, pass: pass}) });
                 const d = await res.json(); alert(d.message); if(!d.error) { loggedUserNick = nick; updateUserDisplay(); }
             } else if(action === 'backup') {
-                // Posielame kompletne všetky aktuálne nastavenia aplikácie priamo do Cloudu
                 const settings = { fil: document.getElementById('cfg_fil').value, ele: document.getElementById('cfg_ele').value, watt: document.getElementById('cfg_watt').value, lang: currentLang, curr: currentCurr };
                 const res = await fetch(CLOUD_URL, { method: 'POST', body: JSON.stringify({action: 'backup', pass: pass, data: items, settings: settings}) });
                 const d = await res.json(); alert(d.message);
@@ -534,11 +557,10 @@
                 const d = await res.json();
                 if (d.error) alert(d.message); else {
                     items = d.data || []; loggedUserNick = d.nick; totalUsersCount = d.userCount;
-                    // Ak záloha obsahovala nastavenia (zo staršej verzie užívateľa), aplikujeme ich naspäť
                     if(d.settings) {
                         document.getElementById('cfg_fil').value = d.settings.fil || 19; 
                         document.getElementById('cfg_ele').value = d.settings.ele || 0.19;
-                        document.getElementById('cfg_watt').value = d.settings.watt || 120; // Načítanie spotreby (WATT)
+                        document.getElementById('cfg_watt').value = d.settings.watt || 120;
                         currentLang = d.settings.lang || 'sk'; 
                         currentCurr = d.settings.curr || 'EUR';
                         setCurrency(currentCurr, true); setLang(currentLang);
