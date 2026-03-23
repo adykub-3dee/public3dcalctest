@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>3Dee Pro - Cloud & Business</title>
+    <style>
+        :root {
+            --bg: #0a0a0a; --card: #161616; --text: #ffffff;
+            --primary: #00a2ff; --accent: #ffcc00; --danger: #ff3e3e; --success: #00ff88;
+            --border: #333; --cp-color: #aaa; --input-bg: #000; --input-border: #444;
+            --btn-bg: #222; --job-bg: #1a1a1a;
+        }
+
+        .light-theme {
+            --bg: #f4f5f7; --card: #ffffff; --text: #111111;
+            --primary: #0066cc; --accent: #e6b800; --danger: #cc0000; --success: #009944;
+            --border: #cccccc; --cp-color: #777777; --input-bg: #ffffff; --input-border: #bbbbbb;
+            --btn-bg: #eeeeee; --job-bg: #fdfdfd;
+        }
+
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); padding: 10px; margin: 0; transition: background 0.3s, color 0.3s; }
+        
+        #user_display { font-size: 0.8em; color: var(--success); font-weight: bold; margin-bottom: 5px; text-transform: uppercase; min-height: 1.2em; }
+        #total_users_display { position: fixed; bottom: 5px; left: 10px; font-size: 0.7em; color: #888; font-weight: bold; z-index: 100; background: var(--bg); padding: 2px 5px; border-radius: 4px; }
+
+        .header { width: 100%; max-width: 1200px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 12px; margin: 0 auto 15px auto; gap: 10px; }
+        .header-center { flex-grow: 1; text-align: center; }
+        #live-clock { font-size: 1.8em; font-weight: 900; color: var(--text); margin-bottom: 2px; }
+        #live-date { font-size: 0.85em; color: var(--primary); text-transform: uppercase; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        
+        .config-bar { background: var(--job-bg); padding: 10px; border-radius: 10px; display: flex; gap: 10px; border: 1px solid var(--primary); align-items: flex-end; flex-wrap: wrap;}
+        .config-input { background: var(--input-bg); border: 1px solid var(--primary); color: var(--primary); font-weight: bold; text-align: center; border-radius: 4px; padding: 5px; width: 65px; }
+        .btn-toggle { background: var(--btn-bg); color: var(--text); border: 1px solid var(--border); border-radius: 4px; padding: 5px 10px; font-weight: bold; cursor: pointer; transition: 0.2s; height: 30px; display: flex; align-items: center; justify-content: center;}
+        
+        .lang-switcher, .curr-switcher { display: flex; gap: 5px; margin-right: 10px; align-items: center; }
+        .lang-btn, .curr-btn { background: transparent; border: none; color: #666; cursor: pointer; font-weight: bold; font-size: 0.8em; padding: 2px 5px; transition: 0.3s; }
+        .lang-btn.active, .curr-btn.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
+
+        .btn-info { background: transparent; color: var(--primary); border: 1px solid var(--primary); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 0.7em; cursor: pointer; font-weight: bold; margin-left: 5px;}
+
+        .main-layout { width: 100%; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 20px; }
+        @media (min-width: 768px) { .main-layout { grid-template-columns: 340px 1fr; } }
+
+        .panel { background: var(--card); border-radius: 16px; padding: 20px; border: 1px solid var(--border); transition: all 0.3s; }
+        .sticky { position: sticky; top: 15px; z-index: 10; }
+
+        label { display: block; font-size: 0.65em; color: #888; text-transform: uppercase; margin-bottom: 4px; font-weight: 600; }
+        input { width: 100%; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text); padding: 10px; border-radius: 8px; box-sizing: border-box; font-size: 16px; margin-bottom: 8px; outline: none; }
+        
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        .status-toggle { display: flex; background: var(--input-bg); border-radius: 8px; border: 1px solid var(--input-border); margin-bottom: 15px; overflow: hidden; }
+        .st-btn { flex: 1; padding: 10px; text-align: center; font-weight: bold; cursor: pointer; font-size: 0.8em; color: #777; }
+        .st-btn.active { color: #fff; }
+        .light-theme .st-btn.active { color: #000; }
+        .st-btn-cp.active { background: var(--cp-color); }
+        .st-btn-ok.active { background: var(--success); color: #000; }
+
+        .calc-preview { background: rgba(255, 204, 0, 0.05); padding: 12px; border-radius: 10px; margin: 10px 0; border: 1px solid var(--accent); color: var(--accent); }
+        .line { display: flex; justify-content: space-between; align-items: center; font-weight: bold; margin-bottom: 5px; }
+        .input-inline { background: rgba(255, 204, 0, 0.1); border: 1px solid var(--accent); color: var(--accent); padding: 4px 8px; border-radius: 4px; width: 85px; text-align: right; font-weight: bold; }
+
+        .btn-add { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: 800; cursor: pointer; text-transform: uppercase; margin-top: 5px; }
+        .btn-buy { background: transparent; color: var(--success); border: 1px solid var(--success); padding: 8px; width: 100%; border-radius: 10px; margin-top: 10px; cursor: pointer; font-weight: bold; }
+
+        .cloud-zone { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
+        .cloud-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .btn-cloud { width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; font-size: 0.8em; }
+        .btn-backup { background: #0044cc; color: white; }
+        .btn-restore { background: var(--btn-bg); color: var(--text); border: 1px solid var(--border); }
+        .btn-register { background: var(--success); color: #000; }
+
+        .summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
+        @media (min-width: 900px) { .summary-grid { grid-template-columns: repeat(4, 1fr); } }
+        
+        .stat-card { background: var(--job-bg); padding: 12px; border-radius: 12px; border: 1px solid var(--border); text-align: center; }
+        .stat-label { font-size: 0.6em; color: #888; text-transform: uppercase; }
+        .stat-value { font-size: 1.1em; font-weight: 900; }
+        .card-spent { color: var(--danger); border-bottom: 2px solid var(--danger); }
+        .card-profit { border: 2px solid var(--success); color: var(--success); }
+
+        .search-input { width: 100%; background: var(--job-bg); border: 2px solid var(--primary); color: var(--text); padding: 12px; border-radius: 10px; font-weight: bold; box-sizing: border-box; margin-bottom: 15px; }
+
+        /* --- STÝL ZOBRAZENIA POLOŽKY (OPTIMALIZOVANÉ) --- */
+        .job-card { 
+            background: #111; 
+            border: 1px solid #333; 
+            border-radius: 12px; 
+            margin-bottom: 10px; 
+            display: flex; 
+            align-items: center; 
+            overflow: hidden; 
+            position: relative;
+            transition: 0.2s;
+        }
+        .job-card.is-editing { border: 2px solid var(--accent) !important; background: rgba(255, 204, 0, 0.15) !important; }
+        .job-card.is-cp { opacity: 0.8; border-style: dashed; }
+        
+        .type-buy { border-left: 5px solid var(--danger); }
+        .type-print { border-left: 5px solid var(--primary); }
+
+        .sort-controls { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px; border-right: 1px solid var(--border); }
+        .sc-btn { font-size: 0.9em; cursor: pointer; color: #888; transition: 0.2s; user-select: none; }
+        .sc-drag { font-weight: bold; font-size: 1.3em; cursor: grab; padding: 2px; }
+
+        .job-info { flex: 1; padding: 10px; min-width: 100px; overflow: hidden; }
+        .job-name { font-weight: bold; display: block; font-size: 1em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .job-tag { font-size: 0.55em; padding: 1px 4px; border-radius: 4px; margin-left: 5px; vertical-align: middle; }
+        .tag-cp { background: #666; color: #fff; }
+        .tag-ok { background: var(--success); color: #000; }
+
+        .job-data { display: flex; gap: 10px; text-align: right; padding: 10px; }
+        .data-item { display: flex; flex-direction: column; min-width: 65px; }
+        .data-label { font-size: 0.55em; color: #888; text-transform: uppercase; }
+        .data-val { font-size: 0.9em; font-weight: bold; }
+
+        .job-profit { min-width: 80px; text-align: right; font-weight: 900; font-size: 1.1em; border-left: 1px solid var(--border); padding: 10px; display: flex; flex-direction: column; justify-content: center; }
+        .profit-label { font-size: 0.45em; display: block; color: #888; text-transform: uppercase; }
+        
+        .actions { display: flex; gap: 4px; padding: 8px; }
+        .action-btn { background: var(--btn-bg); border: 1px solid var(--border); color: #888; cursor: pointer; padding: 6px; border-radius: 6px; transition: 0.3s; font-size: 0.9em; }
+        .action-btn.active-status { background: var(--success); color: #000; border-color: var(--success); }
+        .action-btn.is-active-edit { background: var(--accent) !important; color: #000 !important; animation: pulse-edit 1.5s infinite; }
+
+        @keyframes pulse-edit { 0% { box-shadow: 0 0 5px var(--accent); } 50% { box-shadow: 0 0 12px var(--accent); } 100% { box-shadow: 0 0 5px var(--accent); } }
+
+        /* --- MOBILE RESPONSIVE FIX (KOMPAKTNÉ ZOBRAZENIE) --- */
+        @media (max-width: 600px) {
+            .job-card { flex-wrap: wrap; padding-bottom: 0; }
+            .sort-controls { padding: 5px; order: 1; border-right: none; border-bottom: 1px solid #222; width: 100%; flex-direction: row; justify-content: center; height: 30px; }
+            .job-info { order: 2; flex: 1 1 60%; padding: 8px; }
+            .job-profit { order: 3; flex: 1 1 30%; border-left: none; padding: 8px; border-bottom: 1px solid #222; }
+            .job-data { order: 4; flex: 1 1 100%; justify-content: space-around; background: rgba(0,0,0,0.2); border-bottom: 1px solid #222; padding: 6px; }
+            .actions { order: 5; flex: 1 1 100%; justify-content: center; padding: 8px; }
+            .data-item { min-width: auto; text-align: center; }
+        }
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999; backdrop-filter: blur(5px); }
+        .modal-content { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card); padding: 25px; border: 2px solid var(--primary); z-index: 1000; border-radius: 20px; width: 90%; max-width: 450px; line-height: 1.5; }
+        .info-list { margin: 15px 0; padding-left: 0; list-style: none; }
+        .info-list li { margin-bottom: 10px; font-size: 0.9em; position: relative; padding-left: 20px; }
+        .info-list li::before { content: "•"; color: var(--primary); position: absolute; left: 0; font-weight: bold; }
+        .btn-modal-close { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; margin-top: 15px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div>
+        <div id="user_display"></div>
+        <h1 style="margin:0; font-size:1.4em; color:var(--primary);">3Dee <span style="color:var(--text)">PRO calc</span></h1>
+    </div>
+    <div class="header-center">
+        <div id="live-clock">--:--:--</div>
+        <div id="live-date">--.--.---- <button class="btn-info" onclick="openInfo()">i</button></div>
+    </div>
+    <div class="config-bar">
+        <div><label id="cfg_lbl_fil">/KG</label><input type="number" id="cfg_fil" value="19" class="config-input"></div>
+        <div><label id="cfg_lbl_ele">/KWH</label><input type="number" id="cfg_ele" value="0.19" class="config-input"></div>
+        
+        <div class="curr-switcher">
+            <button class="curr-btn active" id="cur_eur" onclick="setCurrency('EUR')">EUR</button>
+            <button class="curr-btn" id="cur_czk" onclick="setCurrency('CZK')">CZK</button>
+        </div>
+
+        <div class="lang-switcher">
+            <button class="lang-btn" id="l_en" onclick="setLang('en')">EN</button>
+            <button class="lang-btn" id="l_sk" onclick="setLang('sk')">SK</button>
+            <button class="lang-btn" id="l_cz" onclick="setLang('cz')">CZ</button>
+        </div>
+        <button id="btn_theme" class="btn-toggle" onclick="toggleTheme()">🌙</button>
+    </div>
+</div>
+
+<div class="main-layout">
+    <div class="side-panels">
+        <div class="panel sticky">
+            <div class="cloud-zone">
+                <button class="btn-cloud btn-register" id="btn_reg" onclick="handleCloud('register')">👤 CREATE USER</button>
+                <div class="cloud-row">
+                    <button class="btn-cloud btn-backup" id="btn_backup" onclick="handleCloud('backup')">☁️ BACKUP</button>
+                    <button class="btn-cloud btn-restore" id="btn_restore" onclick="handleCloud('restore')">⬇️ RESTORE</button>
+                </div>
+            </div>
+
+            <h2 id="form_title" style="color:var(--primary); font-size: 1.1em; margin-bottom: 15px;">✚ NEW PRINT</h2>
+            
+            <label id="lbl_type">Record Type</label>
+            <div class="status-toggle">
+                <div id="st_cp" class="st-btn st-btn-cp" onclick="setStatus('cp')">Quote (CP)</div>
+                <div id="st_ok" class="st-btn st-btn-ok active" onclick="setStatus('ok')">Done (OK)</div>
+            </div>
+
+            <label id="lbl_name">Project Name</label>
+            <input type="text" id="in_name" placeholder="...">
+            <div class="row">
+                <div><label id="lbl_w">Weight/pc (g)</label><input type="number" id="in_w" step="any"></div>
+                <div><label id="lbl_count">Quantity</label><input type="number" id="in_count" value="1"></div>
+            </div>
+            <div class="row">
+                <div><label id="lbl_h">Hours</label><input type="number" id="in_h"></div>
+                <div><label id="lbl_m">Minutes</label><input type="number" id="in_m"></div>
+            </div>
+            <label id="lbl_price">Sell Price / 1 pc</label>
+            <input type="number" id="in_price_per" step="any">
+            
+            <div class="calc-preview">
+                <div class="line"><span id="lbl_mat_tot">MATERIAL TOTAL:</span> <span id="view_total_w">0 g</span></div>
+                <div class="line">
+                    <span id="lbl_cost_tot">COST:</span> 
+                    <input type="number" id="view_total_cost" class="input-inline" step="any" value="0.00" oninput="updatePreview(false)">
+                </div>
+                <div class="line" style="border-top: 1px solid var(--border); padding-top: 5px; font-size: 1.1em;">
+                    <span id="lbl_profit_tot">NET PROFIT:</span> <span id="view_total_profit">0.00 €</span>
+                </div>
+            </div>
+            
+            <button class="btn-add" id="btn_save" onclick="saveItem()">SAVE TO HISTORY</button>
+            <button id="btn_cancel" onclick="clearForm()" style="display:none; background:var(--btn-bg); border:1px solid var(--border); color:var(--danger); padding:10px; border-radius:10px; width:100%; margin-top:10px; cursor:pointer; font-weight:bold;">✖ CANCEL EDIT</button>
+            <button class="btn-buy" id="btn_other" onclick="addOtherItem()">✚ BUY / EXPENSE</button>
+        </div>
+    </div>
+
+    <div>
+        <div class="summary-grid">
+            <div class="stat-card"><div class="stat-label" id="stat_lbl_ok">Printed (OK)</div><div class="stat-value" id="total_kg_ever">0.00 kg</div></div>
+            <div class="stat-card"><div class="stat-label" id="stat_lbl_time">Print Time</div><div class="stat-value" id="total_time_ever">0h 0m</div></div>
+            <div class="stat-card"><div class="stat-label" id="stat_lbl_ord">Orders</div><div class="stat-value" id="stat_count">0</div></div>
+            <div class="stat-card"><div class="stat-label" id="stat_lbl_rev">Revenue</div><div class="stat-value" id="stat_obrat">0.00 €</div></div>
+            <div class="stat-card card-spent"><div class="stat-label" id="stat_lbl_mat">Material</div><div class="stat-value" id="total_mat_cost">0.00 €</div></div>
+            <div class="stat-card card-spent"><div class="stat-label" id="stat_lbl_ele">Electricity</div><div class="stat-value" id="total_ele_cost">0.00 €</div></div>
+            <div class="stat-card card-spent"><div class="stat-label" id="stat_lbl_other">Other Extra</div><div class="stat-value" id="total_spent_other">0.00 €</div></div>
+            <div class="stat-card card-profit"><div class="stat-label" style="color:var(--success)" id="stat_lbl_profit">Net Profit</div><div class="stat-value" id="stat_profit">0.00 €</div></div>
+        </div>
+
+        <input type="text" id="search_input" class="search-input" placeholder="🔍 Search history..." oninput="refreshUI()">
+        <div id="list_container"></div>
+    </div>
+</div>
+
+<div id="total_users_display"></div>
+
+<div class="modal-overlay" id="info_overlay" onclick="closeInfo()"></div>
+<div class="modal-content" id="info_modal">
+    <h3 id="info_title" style="margin-top:0; color:var(--primary); border-bottom:1px solid var(--border); padding-bottom:10px;">ℹ️ INFO</h3>
+    <div id="info_text_content"></div>
+    <p style="font-size: 0.8em; text-align: center; color: var(--primary); margin-top: 20px;">
+        Instagram: <b>3dee.tlac</b>
+    </p>
+    <button class="btn-modal-close" id="btn_modal_close" onclick="closeInfo()">Close</button>
+</div>
+<script>
+    const CLOUD_URL = "https://script.google.com/macros/s/AKfycbxRLFoo5J75xmTD8mv4LEEF-uBSYzALnJJYBQxpYht7qtggIVfrXjROEG__tk1BMTrV/exec";
+
+    let items = [];
+    let editingId = null;
+    let currentStatus = 'ok';
+    let isDark = true;
+    let loggedUserNick = "";
+    let totalUsersCount = 0;
+    let currentLang = 'en';
+    let currentCurr = 'EUR';
+    const exchangeRate = 25.0; 
+
+    const dict = {
+        sk: {
+            title: "✚ NOVÁ TLAČ", edit: "✎ UPRAVIŤ TLAČ", cp: "CP (Ponuka)", ok: "OK (Výroba)",
+            type: "Typ záznamu", name: "Názov Projektu", w: "Váha/ks (g)", count: "Počet ks",
+            h: "Hodiny", m: "Minúty", price: "Predajná cena / 1 ks",
+            m_tot: "MATERIÁL SPOLU:", c_tot: "NÁKLAD:", p_tot: "ČISTÝ ZISK:",
+            save: "ULOŽIŤ DO HISTÓRIE", save_edit: "ULOŽIŤ ZMENY", cancel: "✖ ZRUŠIŤ ÚPRAVU", other: "✚ NÁKUP / INÉ VÝDAVKY",
+            b_back: "☁️ ZÁLOHOVAŤ", b_rest: "⬇️ OBNOVIŤ", b_reg: "👤 VYTVORIŤ UŽÍVATEĽA",
+            s_ok: "Vytlačené (OK)", s_time: "Čas Tlače", s_ord: "Zákazky", s_rev: "Obrat",
+            s_mat: "Materiál", s_ele: "Elektrina", s_oth: "Iné Extra", s_prof: "Čistý Zisk",
+            search: "🔍 Vyhľadať v histórii...", cost: "Náklad", sell: "Predaj", profit: "Zisk", buy: "Nákup / Výdavok",
+            p_nick: "Zadaj NICK (Prezývku):", p_pass: "Zadaj HESLO:", m_users: "Celkový počet užívateľov: ",
+            info_title: "ℹ️ INFO",
+            info_text: `<ul class="info-list">
+                <li>Hobby nástroj na prepočítavanie 3D tlače a ukladanie zákaziek.</li>
+                <li>Pre dlhodobé ukladanie zákaziek je potrebné si vytvoriť Nick a Heslo.</li>
+                <li>Keď máte vytvorené svoje konto, následne sa prihlasujete len cez vaše heslo tlačidlom <b>OBNOVIŤ</b> (odporúčame zvoliť komplexnejšie heslo).</li>
+                <li>Keď máte nahodené svoje položky, treba stlačiť <b>ZÁLOHOVAŤ</b>, aby sa zapísali do cloudu pod vaším účtom.</li>
+                <li>Refresh stránky vás vráti do anonymného režimu (bez účtu).</li>
+                <li>Návrat do účtu je opäť možný cez tlačidlo <b>OBNOVIŤ</b> a vaše heslo.</li>
+            </ul>`,
+            close: "Zavrieť"
+        },
+        en: {
+            title: "✚ NEW PRINT", edit: "✎ EDIT PRINT", cp: "Quote (CP)", ok: "Done (OK)",
+            type: "Record Type", name: "Project Name", w: "Weight/pc (g)", count: "Quantity",
+            h: "Hours", m: "Minutes", price: "Sell Price / 1 pc",
+            m_tot: "MATERIAL TOTAL:", c_tot: "COST:", p_tot: "NET PROFIT:",
+            save: "SAVE TO HISTORY", save_edit: "SAVE CHANGES", cancel: "✖ CANCEL EDIT", other: "✚ BUY / EXPENSE",
+            b_back: "☁️ BACKUP", b_rest: "⬇️ RESTORE", b_reg: "👤 CREATE USER",
+            s_ok: "Printed (OK)", s_time: "Print Time", s_ord: "Orders", s_rev: "Revenue",
+            s_mat: "Material", s_ele: "Electricity", s_oth: "Other Extra", s_prof: "Net Profit",
+            search: "🔍 Search history...", cost: "Cost", sell: "Sell", profit: "Profit", buy: "Purchase / Expense",
+            p_nick: "Enter NICK:", p_pass: "Enter PASSWORD:", m_users: "Total registered users: ",
+            info_title: "ℹ️ INFO",
+            info_text: `<ul class="info-list">
+                <li>Hobby tool for 3D printing calculations and job tracking.</li>
+                <li>Create a Nick and Password for long-term storage of your jobs.</li>
+                <li>Once registered, log in using your password via the <b>RESTORE</b> button (we recommend a complex password).</li>
+                <li>After adding items, click <b>BACKUP</b> to save them to the cloud under your account.</li>
+                <li>Refreshing the page will log you out to guest mode.</li>
+                <li>Return to your account by using the <b>RESTORE</b> button and your password.</li>
+            </ul>`,
+            close: "Close"
+        },
+        cz: {
+            title: "✚ NOVÝ TISK", edit: "✎ UPRAVIT TISK", cp: "CP (Nabídka)", ok: "OK (Výroba)",
+            type: "Typ záznamu", name: "Název Projektu", w: "Váha/ks (g)", count: "Počet ks",
+            h: "Hodiny", m: "Minuty", price: "Prodejní cena / 1 ks",
+            m_tot: "MATERIÁL SPOLU:", c_tot: "NÁKLAD:", p_tot: "ČISTÝ ZISK:",
+            save: "ULOŽIT DO HISTORIE", save_edit: "ULOŽIT ZMĚNY", cancel: "✖ ZRUŠIT ÚPRAVU", other: "✚ NÁKUP / JINÉ VÝDAJE",
+            b_back: "☁️ ZÁLOHOVAT", b_rest: "⬇️ OBNOVIT", b_reg: "👤 VYTVOŘIT UŽIVATELE",
+            s_ok: "Vytištěno (OK)", s_time: "Čas Tisku", s_ord: "Zakázky", s_rev: "Obrat",
+            s_mat: "Materiál", s_ele: "Elektřina", s_oth: "Jiné Extra", s_prof: "Čistý Zisk",
+            search: "🔍 Vyhledat v historii...", cost: "Náklad", sell: "Prodej", profit: "Zisk", buy: "Nákup / Výdaj",
+            p_nick: "Zadej NICK:", p_pass: "Zadej HESLO:", m_users: "Celkový počet uživatelů: ",
+            info_title: "ℹ️ INFO",
+            info_text: `<ul class="info-list">
+                <li>Hobby nástroj pro přepočet 3D tisku a ukládání zakázek.</li>
+                <li>Pro dlouhodobé ukládání zakázek je nutné si vytvořit Nick a Heslo.</li>
+                <li>Jakmile máte vytvořený účet, přihlašujete se již jen heslem přes tlačítko <b>OBNOVIT</b> (doporučujeme zvolit komplexnější heslo).</li>
+                <li>Po zadání položek klikněte na <b>ZÁLOHOVAT</b>, aby se data uložila do cloudu pod váš účet.</li>
+                <li>Refresh stránky vás vrátí do anonymního režimu (bez účtu).</li>
+                <li>Návrat do účtu je opět možný přes tlačítko <b>OBNOVIT</b> a vaše heslo.</li>
+            </ul>`,
+            close: "Zavřít"
+        }
+    };
+
+    function getSym() { return currentCurr === 'EUR' ? '€' : 'Kč'; }
+
+    function toggleTheme() {
+        isDark = !isDark;
+        document.body.classList.toggle('light-theme', !isDark);
+        document.getElementById('btn_theme').innerText = isDark ? "🌙" : "☀️";
+    }
+
+    function setCurrency(c) {
+        const old = currentCurr;
+        currentCurr = c;
+        document.getElementById('cur_eur').classList.toggle('active', c === 'EUR');
+        document.getElementById('cur_czk').classList.toggle('active', c === 'CZK');
+        
+        if(old !== c) {
+            let f = document.getElementById('cfg_fil');
+            let e = document.getElementById('cfg_ele');
+            if(c === 'CZK') {
+                f.value = (f.value * exchangeRate).toFixed(0);
+                e.value = (e.value * exchangeRate).toFixed(2);
+            } else {
+                f.value = (f.value / exchangeRate).toFixed(0);
+                e.value = (e.value / exchangeRate).toFixed(2);
+            }
+        }
+        applyTexts();
+        updatePreview();
+        refreshUI();
+    }
+
+    function setLang(l) {
+        currentLang = l;
+        applyTexts();
+        refreshUI();
+    }
+
+    function applyTexts() {
+        const t = dict[currentLang];
+        const sym = getSym();
+        
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('l_' + currentLang).classList.add('active');
+
+        document.getElementById('form_title').innerText = editingId ? t.edit : t.title;
+        document.getElementById('st_cp').innerText = t.cp; document.getElementById('st_ok').innerText = t.ok;
+        document.getElementById('lbl_type').innerText = t.type; document.getElementById('lbl_name').innerText = t.name;
+        document.getElementById('lbl_w').innerText = t.w; document.getElementById('lbl_count').innerText = t.count;
+        document.getElementById('lbl_h').innerText = t.h; document.getElementById('lbl_m').innerText = t.m;
+        document.getElementById('lbl_price').innerText = `${t.price} (${sym})`;
+        document.getElementById('lbl_mat_tot').innerText = t.m_tot; 
+        document.getElementById('lbl_cost_tot').innerText = `${t.c_tot} (${sym})`; 
+        document.getElementById('lbl_profit_tot').innerText = t.p_tot;
+        document.getElementById('btn_save').innerText = editingId ? t.save_edit : t.save;
+        document.getElementById('btn_cancel').innerText = t.cancel; document.getElementById('btn_other').innerText = t.other;
+        document.getElementById('btn_backup').innerText = t.b_back; document.getElementById('btn_restore').innerText = t.b_rest;
+        document.getElementById('btn_reg').innerText = t.b_reg;
+        document.getElementById('stat_lbl_ok').innerText = t.s_ok; document.getElementById('stat_lbl_time').innerText = t.s_time;
+        document.getElementById('stat_lbl_ord').innerText = t.s_ord; document.getElementById('stat_lbl_rev').innerText = t.s_rev;
+        document.getElementById('stat_lbl_mat').innerText = t.s_mat; document.getElementById('stat_lbl_ele').innerText = t.s_ele;
+        document.getElementById('stat_lbl_other').innerText = t.s_oth; document.getElementById('stat_lbl_profit').innerText = t.s_prof;
+        document.getElementById('search_input').placeholder = t.search;
+        document.getElementById('info_title').innerText = t.info_title;
+        document.getElementById('info_text_content').innerHTML = t.info_text;
+        document.getElementById('btn_modal_close').innerText = t.close;
+        document.getElementById('cfg_lbl_fil').innerText = `${sym}/KG`;
+        document.getElementById('cfg_lbl_ele').innerText = `${sym}/KWH`;
+        updateUserDisplay();
+    }
+
+    function openInfo() {
+        document.getElementById('info_overlay').style.display = 'block';
+        document.getElementById('info_modal').style.display = 'block';
+    }
+    function closeInfo() {
+        document.getElementById('info_overlay').style.display = 'none';
+        document.getElementById('info_modal').style.display = 'none';
+    }
+
+    function updateUserDisplay() {
+        document.getElementById('user_display').innerText = loggedUserNick ? `👤 ${loggedUserNick}` : "";
+        document.getElementById('total_users_display').innerText = `${dict[currentLang].m_users} ${totalUsersCount}`;
+    }
+
+    async function handleCloud(action) {
+        const t = dict[currentLang];
+        let pass, nick;
+        if(action === 'register') {
+            nick = prompt(t.p_nick); if(!nick) return;
+            pass = prompt(t.p_pass); if(!pass) return;
+        } else {
+            pass = prompt(t.p_pass); if(!pass) return;
+        }
+
+        const btn = document.getElementById(action === 'register' ? 'btn_reg' : (action === 'backup' ? 'btn_backup' : 'btn_restore'));
+        const origText = btn.innerText; btn.innerText = "⏳...";
+        
+        try {
+            if(action === 'register') {
+                const res = await fetch(CLOUD_URL, { method: 'POST', body: JSON.stringify({action: 'register', nick: nick, pass: pass}) });
+                const data = await res.json();
+                if (data.error) alert("❌ " + data.message); else { alert("✅ " + data.message); loggedUserNick = nick; updateUserDisplay(); }
+            } 
+            else if(action === 'backup') {
+                const res = await fetch(CLOUD_URL, { method: 'POST', body: JSON.stringify({action: 'backup', pass: pass, data: items, currency: currentCurr}) });
+                const data = await res.json();
+                if (data.error) alert("❌ " + data.message); else alert("✅ " + data.message);
+            } 
+            else if(action === 'restore') {
+                const res = await fetch(`${CLOUD_URL}?action=restore&pass=${encodeURIComponent(pass)}`);
+                const data = await res.json();
+                if (data.error) alert("❌ " + data.message); 
+                else { 
+                    items = Array.isArray(data.data) ? data.data : []; 
+                    loggedUserNick = data.nick || "";
+                    totalUsersCount = data.userCount || 0; 
+                    refreshUI(); updateUserDisplay(); alert("✅ OK");
+                }
+            }
+        } catch(e) { alert("❌ Error."); }
+        btn.innerText = origText;
+    }
+
+    function setStatus(s) {
+        currentStatus = s;
+        document.getElementById('st_cp').classList.toggle('active', s === 'cp');
+        document.getElementById('st_ok').classList.toggle('active', s === 'ok');
+    }
+
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('live-clock').innerText = now.toLocaleTimeString('sk-SK');
+        document.getElementById('live-date').innerHTML = now.toLocaleDateString('sk-SK', {weekday:'long', day:'2-digit', month:'long'}) + ` <button class="btn-info" onclick="openInfo()">i</button>`;
+    }
+    setInterval(updateClock, 1000); updateClock();
+
+    function updatePreview(auto = true) {
+        const w = parseFloat(document.getElementById('in_w').value) || 0;
+        const c = parseInt(document.getElementById('in_count').value) || 1;
+        const h = parseFloat(document.getElementById('in_h').value) || 0;
+        const m = parseFloat(document.getElementById('in_m').value) || 0;
+        const p = parseFloat(document.getElementById('in_price_per').value) || 0;
+        const f = parseFloat(document.getElementById('cfg_fil').value) || (currentCurr === 'EUR' ? 19 : 475);
+        const e = parseFloat(document.getElementById('cfg_ele').value) || (currentCurr === 'EUR' ? 0.19 : 4.75);
+
+        const totalW = w * c, totalMins = (h * 60 + m) * c;
+        const matC = (totalW / 1000) * f, eleC = (totalMins / 60) * 0.12 * e;
+
+        if(auto) document.getElementById('view_total_cost').value = (matC + eleC).toFixed(2);
+        const cost = parseFloat(document.getElementById('view_total_cost').value) || 0;
+        const profit = (p * c - cost);
+        
+        document.getElementById('view_total_w').innerText = totalW.toFixed(0) + " g";
+        document.getElementById('view_total_profit').innerText = profit.toFixed(2) + " " + getSym();
+        return { totalW, totalMins, matC, eleC, cost, totalSell: p * c, w, h, m, p, profit };
+    }
+
+    function saveItem() {
+        const calc = updatePreview(false);
+        const cnt = parseInt(document.getElementById('in_count').value) || 1;
+        const newItem = {
+            id: editingId || Date.now(), type: 'print', status: currentStatus,
+            name: document.getElementById('in_name').value || "Untitled",
+            sell: Number(calc.totalSell), cost: Number(calc.cost), matCost: Number(calc.matC), eleCost: Number(calc.eleC),
+            profit: Number(calc.profit), totalW: Number(calc.totalW), mins: Number(calc.totalMins),
+            weight: Number(calc.w), h: Number(calc.h), m: Number(calc.m), pricePer: Number(calc.p), count: cnt, 
+            date: new Date().toLocaleString(), currency: currentCurr
+        };
+        if(editingId) items = items.map(i => i.id === editingId ? newItem : i);
+        else items.unshift(newItem);
+        clearForm();
+    }
+
+    function editItem(id) {
+        const i = items.find(x => x.id === id); if(!i) return;
+        if(editingId === id) { clearForm(); return; }
+        editingId = id;
+        setStatus(i.status || 'ok');
+        document.getElementById('in_name').value = i.name;
+        document.getElementById('in_w').value = i.weight;
+        document.getElementById('in_count').value = i.count;
+        document.getElementById('in_h').value = i.h;
+        document.getElementById('in_m').value = i.m;
+        document.getElementById('in_price_per').value = i.pricePer;
+        document.getElementById('btn_save').classList.add('is-active-edit');
+        document.getElementById('btn_cancel').style.display = "block";
+        document.getElementById('btn_other').style.display = "none";
+        applyTexts(); window.scrollTo({top: 0, behavior: 'smooth'}); refreshUI();
+    }
+
+    function clearForm() {
+        editingId = null;
+        ['in_name', 'in_w', 'in_h', 'in_m', 'in_price_per'].forEach(id => document.getElementById(id).value = "");
+        document.getElementById('in_count').value = "1";
+        document.getElementById('btn_save').classList.remove('is-active-edit');
+        document.getElementById('btn_cancel').style.display = "none";
+        document.getElementById('btn_other').style.display = "block";
+        applyTexts(); updatePreview(); refreshUI();
+    }
+
+    function deleteItem(id) { if(confirm("Delete?")) { items = items.filter(i => i.id !== id); refreshUI(); } }
+    function duplicateItem(id) { const i = items.find(x => x.id === id); items.unshift({...i, id: Date.now(), date: new Date().toLocaleString()}); refreshUI(); }
+    function toggleItemStatus(id) { items = items.map(i => i.id === id ? {...i, status: i.status === 'ok' ? 'cp' : 'ok'} : i); refreshUI(); }
+
+    function addOtherItem() {
+        const n = prompt("Name:"); if(!n) return;
+        const valStr = prompt("Sum (+ sell, - expense):"); if(!valStr) return;
+        const v = parseFloat(valStr.replace(',','.')); if(isNaN(v)) return;
+        items.unshift({id:Date.now(), type:'buy', status:'ok', name:n, sell: v>0?v:0, cost: v<0?Math.abs(v):0, profit:v, date: new Date().toLocaleString(), currency: currentCurr});
+        refreshUI();
+    }
+
+    function moveListItem(id, action) {
+        const idx = items.findIndex(i => i.id === id); if (idx < 0) return;
+        const item = items.splice(idx, 1)[0];
+        if (action === 'top') items.unshift(item); else items.push(item);
+        refreshUI();
+    }
+    function handleDragStart(e, id) { e.dataTransfer.setData('text/plain', id); e.dataTransfer.effectAllowed = 'move'; setTimeout(() => e.target.style.opacity = '0.5', 0); }
+    function handleDragOver(e) { e.preventDefault(); e.target.closest('.job-card')?.classList.add('drag-over'); }
+    function handleDragLeave(e) { e.target.closest('.job-card')?.classList.remove('drag-over'); }
+    function handleDrop(e, targetId) {
+        e.preventDefault(); e.target.closest('.job-card')?.classList.remove('drag-over');
+        const draggedId = Number(e.dataTransfer.getData('text/plain'));
+        if (draggedId && draggedId !== targetId) {
+            const from = items.findIndex(i => i.id === draggedId);
+            const to = items.findIndex(i => i.id === targetId);
+            if (from >= 0 && to >= 0) {
+                const item = items.splice(from, 1)[0];
+                items.splice(to, 0, item);
+                refreshUI();
+            }
+        }
+    }
+    function handleDragEnd(e) { e.target.style.opacity = '1'; document.querySelectorAll('.job-card').forEach(c => c.classList.remove('drag-over')); }
+
+    function refreshUI() {
+        const container = document.getElementById('list_container');
+        const query = document.getElementById('search_input').value.toLowerCase();
+        container.innerHTML = "";
+        const t = dict[currentLang];
+        const sym = getSym();
+
+        let s_kg=0, s_time=0, s_ord=0, s_rev=0, s_mat=0, s_ele=0, s_prof=0, s_oth=0;
+
+        items.forEach(i => {
+            const isMatch = i.name.toLowerCase().includes(query);
+            
+            let dCost = i.cost;
+            let dSell = i.sell;
+            let dProfit = i.profit;
+
+            if (i.currency === 'EUR' && currentCurr === 'CZK') {
+                dCost *= exchangeRate; dSell *= exchangeRate; dProfit *= exchangeRate;
+            } else if (i.currency === 'CZK' && currentCurr === 'EUR') {
+                dCost /= exchangeRate; dSell /= exchangeRate; dProfit /= exchangeRate;
+            }
+
+            if(i.status === 'ok') {
+                s_rev += dSell; s_prof += dProfit;
+                if(i.type === 'print') {
+                    s_kg += (i.totalW || 0); s_time += (i.mins || 0); s_ord++;
+                    if(i.currency === currentCurr) {
+                        s_mat += (i.matCost || 0); s_ele += (i.eleCost || 0);
+                    } else if(currentCurr === 'CZK') {
+                        s_mat += (i.matCost * exchangeRate); s_ele += (i.eleCost * exchangeRate);
+                    } else {
+                        s_mat += (i.matCost / exchangeRate); s_ele += (i.eleCost / exchangeRate);
+                    }
+                } else { s_oth += dCost; }
+            }
+            if(!isMatch) return;
+
+            const isEditing = editingId === i.id;
+            const isCP = i.status === 'cp';
+            const details = i.type === 'print' ? `${(i.totalW||0).toFixed(0)}g | ${Math.floor((i.mins||0)/60)}h ${(i.mins||0)%60}m` : t.buy;
+
+            const card = document.createElement('div');
+            card.className = `job-card type-${i.type} ${isEditing ? 'is-editing' : ''} ${isCP ? 'is-cp' : ''}`;
+            card.draggable = true;
+            card.ondragstart = (e) => handleDragStart(e, i.id);
+            card.ondragover = handleDragOver;
+            card.ondragleave = handleDragLeave;
+            card.ondrop = (e) => handleDrop(e, i.id);
+            card.ondragend = handleDragEnd;
+            
+            card.innerHTML = `
+                <div class="sort-controls">
+                    <div class="sc-btn" onclick="moveListItem(${i.id}, 'top')">▲</div>
+                    <div class="sc-btn sc-drag">=</div>
+                    <div class="sc-btn" onclick="moveListItem(${i.id}, 'bottom')">▼</div>
+                </div>
+
+                <div class="job-info">
+                    <span class="job-name">${i.name} <span class="job-tag ${isCP?'tag-cp':'tag-ok'}">${isCP?'CP':'OK'}</span></span>
+                    <div style="font-size:0.65em; color:#888; font-weight:bold;">${details}</div>
+                </div>
+                
+                <div class="job-data">
+                    <div class="data-item">
+                        <span class="data-label">${t.cost}</span>
+                        <span class="data-val" style="color:var(--danger)">${dCost.toFixed(2)}${sym}</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">${t.sell}</span>
+                        <span class="data-val" style="color:var(--primary)">${dSell.toFixed(2)}${sym}</span>
+                    </div>
+                </div>
+
+                <div class="job-profit">
+                    <span class="profit-label">${t.profit}</span>
+                    <span style="color:${dProfit>=0?'var(--success)':'var(--danger)'}">${dProfit.toFixed(2)}${sym}</span>
+                </div>
+
+                <div class="actions">
+                    <button class="action-btn ${isCP?'':'active-status'}" onclick="toggleItemStatus(${i.id})">${isCP?'CP':'OK'}</button>
+                    <button class="action-btn" onclick="duplicateItem(${i.id})">❐</button>
+                    <button class="action-btn ${isEditing ? 'is-active-edit' : ''}" onclick="editItem(${i.id})">✎</button>
+                    <button class="action-btn" onclick="deleteItem(${i.id})">🗑</button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+
+        document.getElementById('total_kg_ever').innerText = (s_kg/1000).toFixed(2) + " kg";
+        document.getElementById('total_time_ever').innerText = Math.floor(s_time/60) + "h " + (s_time%60) + "m";
+        document.getElementById('stat_count').innerText = s_ord;
+        document.getElementById('stat_obrat').innerText = s_rev.toFixed(2) + " " + sym;
+        document.getElementById('total_mat_cost').innerText = s_mat.toFixed(2) + " " + sym;
+        document.getElementById('total_ele_cost').innerText = s_ele.toFixed(2) + " " + sym;
+        document.getElementById('total_spent_other').innerText = s_oth.toFixed(2) + " " + sym;
+        document.getElementById('stat_profit').innerText = s_prof.toFixed(2) + " " + sym;
+    }
+
+    ['in_w', 'in_count', 'in_h', 'in_m', 'in_price_per', 'cfg_fil', 'cfg_ele'].forEach(id => {
+        document.getElementById(id).addEventListener('input', () => updatePreview());
+    });
+
+    applyTexts();
+    updatePreview();
+    refreshUI();
+</script>
+</body>
+</html>
